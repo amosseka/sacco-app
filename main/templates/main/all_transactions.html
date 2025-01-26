@@ -1,0 +1,403 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link4 %}
+active-link
+{% endblock %}
+
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Transactions
+    </h2>
+{% endblock %}
+
+
+{% block header %}
+	
+	<form action="" method="POST" id="comparison-form" class="form-control flex gap-4">
+		{% csrf_token %}
+		<select name="comparison">
+			<option value="none">Sort</option>
+			<option value="after">After</option>
+			<option value="before">Before</option>
+			<option value="equal">Equal</option>
+			<option value="month">Month</option>
+			<option value="between">Between</option>
+		</select>
+		<input type="date" name="date_1">
+
+		<button class="border my-2 px-2 rounded-md">
+			<i data-feather="search" class="text-gray-500"></i>
+		</button>
+
+		<a href="/print?context=transactions-all&ids={{print_ids}}" class="text-gray-500 border px-2 py-1 rounded flex items-center">
+			<i data-feather="printer"></i>
+		</a>
+	</form>
+{% endblock %}
+
+
+{% block modal %}
+	{% include 'main/modals/delete_modal.html' %}
+{% endblock %}
+
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto overflow-x-hidden bg-bluish px-6">
+
+		<!-- <h2 class="my-6 text-xl font-semibold text-gray-600">Transactions</h2> -->
+
+		<div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white mt-8">
+
+			<div class="grid gap-x-12 gap-y-4 lg:grid-cols-5 md:grid-cols-1">
+				
+				<div class="min-w-max flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Shares</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.shares|intcomma}} = {{totals.share_value|intcomma}}
+						</p>
+					</div>
+				</div>
+
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="upload" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Withdrawn Shares</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.share_withdraw|intcomma}}
+						</p>
+					</div>
+				</div>
+
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-blue-100 text-blue-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Savings</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.savings|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+						<i data-feather="upload" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Savings Withdraw</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.withdraw|intcomma}}
+						</p>
+					</div>
+				</div>
+
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+						<i data-feather="smile" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Welfare</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.welfare|intcomma}}
+						</p>
+					</div>
+				</div>
+
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="credit-card" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Fines</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.fines|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="circle" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total - Other</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.other|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-blue-100 text-blue-500">
+						<i data-feather="archive" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Project Fee</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.project_fee|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-blue-100 text-blue-500">
+						<i data-feather="pocket" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Amount</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{totals.total|intcomma}}
+							{% if totals.net_total != totals.total %}
+								{% if totals.withdraw != 0 %}
+									- {{totals.withdraw|intcomma}}
+								{% endif %}
+								{% if totals.share_withdraw != 0 %}
+									- {{totals.share_withdraw_value|intcomma}}
+								{% endif %}
+								 = {{totals.net_total|intcomma}}
+							{% endif %}
+						</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+		{% if search_term %}
+			<p class="mb-4 text-xs text-gray-500 uppercase pl-4">
+				<span class="font-semibold">Showing results for -</span> 
+				<span class="text-base">
+					{{search_term}} 
+					{% if not date_1.time %} 
+						{{date_1}}
+					{% else %}
+						{{date_1.date}} 
+					{% endif %} 
+					{% if date_2 %}
+					and 
+					{{date_2}}
+					{% endif %}
+				</span>
+			</p>
+		{% endif %}
+		
+		<a href="?settings=results_order&value={{settings.results_order}}" class="block border-b-[2px] text-gray-500 border-b-blue-400 w-max pb-0.5 mb-4">
+			{% if settings.results_order == "show last added" %}
+				Show latest Transaction
+			{% else %}
+				Show last added Transaction 	
+			{% endif %}
+		</a>
+
+		<div class="w-full rounded-lg shadow-xs border mb-6">
+			<table class="w-full whitespace-nowrap">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">CLIENT</th>
+						<th class="px-4 py-3">DATE</th>
+						<th class="px-4 py-3">SHARES</th>
+						<th class="px-4 py-3">SAVINGS</th>
+						<th class="px-4 py-3">WITHDRAW</th>
+						<th class="px-4 py-3">WELFARE</th>
+                        <th class="px-4 py-3">PF</th>
+						<th class="px-4 py-3">FINES</th>
+						<th class="px-4 py-3" colspan="2">TRANSACTION TYPE</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+
+					{% for transaction in transactions %}
+
+					{% if transaction.other == 0 %}
+						<tr class="text-gray-700 border-t last:border-b cursor-pointer transaction even:bg-row-even odd:bg-row-odd">
+
+							<td class="px-4 py-4">
+								<div class="flex items-center text-sm">
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{transaction.member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									<div class="ml-3">
+										<p class="font-semibold">
+											{{transaction.member.name_snippet|title}}
+										</p>
+										<p class="text-sm tracking-wide text-gray-500">
+											{{transaction.member.code}}
+										</p>
+									</div>
+								</div>
+							</td>
+
+							<td class="px-4 py-4 text-[15px]">
+								{{transaction.date.date}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.shares|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.savings|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.withdraw|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.welfare|intcomma}}
+							</td>
+
+                            <td class="px-4 py-4">
+								{{transaction.project_fee|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.fines|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								<div class="flex items-center gap-4 pl-4">
+                                    <a href="{% url 'main:transaction_detail' transaction.id %}" title="View">
+                                        <i data-feather="eye" class="w-5 h-5 text-cyan-500"></i>
+                                    </a>
+                                    <a href="/new-transaction/?action=edit&id={{transaction.id}}" title="Edit">
+                                        <i data-feather="edit-3" class="w-5 h-5 text-indigo-500"></i>
+                                    </a>
+                                    <a href="#" title="Delete" data="{{transaction.id}}" member="{{transaction.member.code}}" class="transaction-del-btn">
+                                        <i data-feather="trash" class="w-5 h-5 text-red-500"></i>
+                                    </a>
+								</div>
+							</td>
+						</tr>
+					{% endif %}
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+			{% if other_present %}
+
+			<h2 class="font-semibold text-gray-500 px-3 py-4">Other Transactions</h2>
+
+			<table class="w-full group">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">CLIENT</th>
+						<th class="px-4 py-3">DATE</th>
+						<th class="px-4 py-3">AMOUNT</th>
+						<th class="px-4 py-3">REASON</th>
+						<th class="px-4 py-3">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for transaction in transactions %}
+
+						{% if transaction.other != 0 %}
+						<tr class="text-gray-700 border-t last:border-b transaction">
+
+							<td class="px-4 py-3">
+								<div class="flex items-center text-sm">
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{transaction.member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									<div class="ml-3">
+										<p class="font-semibold">
+											{{transaction.member.first_name|title}}
+											{{transaction.member.last_name|title}}
+										</p>
+										<p class="text-sm tracking-wide text-gray-500">{{transaction.member.code}}</p>
+									</div>
+								</div>
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.date.date}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.other|intcomma}}
+							</td>
+
+							<td class="px-4 py-3" style="max-width: 600px;">
+								<div>
+									{{transaction.notes|linebreaks}}
+								</div>
+							</td>
+
+							<td>
+								<div class="flex items-center gap-6 px-4">
+                                    <a href="#" title="View">
+                                        <i data-feather="eye" class="w-5 h-5 text-cyan-500"></i>
+                                    </a>
+                                    <a href="/new-transaction/?action=edit&id={{transaction.id}}" title="Edit">
+                                        <i data-feather="edit-3" class="w-5 h-5 text-indigo-500"></i>
+                                    </a>
+                                    <a href="#" title="Delete" data="{{transaction.id}}" member="{{transaction.member.code}}" class="transaction-del-btn">
+                                        <i data-feather="trash" class="w-5 h-5 text-red-500"></i>
+                                    </a>
+								</div>
+							</td>
+						</tr>
+						{% endif %}
+
+					{% endfor %}
+					</tbody>
+			</table>
+
+			{% endif %}
+
+			{% if page_range %}
+				<div class="py-4 px-2 flex justify-end paginator">
+					
+					<div class="flex text-gray-500">
+				
+						{% if transactions.has_previous %}
+							<a href="?page={{transactions.previous_page_number}}">
+								<i data-feather="chevron-left" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+
+						{% for page in page_range %}
+							{% if page == transactions.number %}
+								<a href="?page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+							{% else %}
+								<a href="?page={{page}}">{{page}}</a>
+							{% endif %}
+						{% endfor %}
+
+						{% if transactions.has_next %}
+							<a href="?page={{transactions.next_page_number}}">
+								<i data-feather="chevron-right" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+					</div>
+
+				</div>
+			{% endif %}
+
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/all_transactions.js' %}"></script>
+{% endblock %}

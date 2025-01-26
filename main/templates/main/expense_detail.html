@@ -1,0 +1,145 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Expense 
+    </h2>
+{% endblock %}
+
+{% block link9 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<h2 class="my-6 text-xl font-semibold text-gray-600"></h2>
+
+        <div>
+
+			<div class="flex mb-4 gap-4">
+
+				<button class="button mt-0 ml-0 w-48 flex justify-between bg-blue-500 hover:bg-blue-600" data-label="form-toggler">
+					<span>New Item</span>
+					<i data-feather="plus" class="w-5 h-5"></i>
+				</button>
+
+				<a href="?action=delete&modal=expense" class="button mt-0 ml-0 w-[6.5rem] flex justify-between bg-red-400 hover:bg-red-500 cursor-pointer">
+					<span>Delete</span>
+					<i data-feather="trash" class="w-5 h-5"></i>
+				</a>
+
+			</div>
+
+			<div class="w-full rounded-lg shadow-xs border bg-white py-2 px-4 mb-4 h-0 hidden" data-label="form-container">
+
+				<form method="POST" action="" class="form-control" id="expense-item-form">
+					{% csrf_token %}
+					{{form}}
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			</div>
+
+		</div>
+
+        <div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white">
+
+            <h2 class="text-lg font-bold text-gray-600">SR. NO. {{expense.receipt_no}}</h2>
+
+            <div class="my-4">
+				<p class="my-2">From: {{expense.get_from}}</p>
+				<p class="my-2">To: {{expense.get_to}}</p>
+				<p class="my-2">Date: {{expense.date.date}}</p>
+			</div>
+
+			<div class="flex gap-20 flex-wrap">
+				
+				<div class="flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Items</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{expense.items_no}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Amount</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{expense.total_amount|intcomma}}
+						</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+        <div class="w-full rounded-lg shadow-xs border mb-4">
+			<table class="w-full whitespace-nowrap">
+
+				<thead>
+					<tr class="text-[13px] tracking-wide text-left text-gray-500 bg-row-even">
+						<th class="px-4 py-3">No.</th>
+						<th class="px-4 py-3">Description</th>
+						<th class="px-4 py-3">Quantity Required</th>
+						<th class="px-4 py-3">Cost Price</th>
+						<th class="px-4 py-3">Total Value</th>
+						<th class="px-4 py-3">Actions</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for item in expense_items %}
+
+						<tr class="text-gray-700 border-t odd:bg-row-odd even:bg-row-even">
+
+							<td class="px-4 py-3">
+								{{forloop.counter}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{item.name}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{item.quantity|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{item.cost_price|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{item.total_value|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								<a href="?action=delete&modal=expense-item&id={{item.id}}" title="Delete" class="flex items-center gap-2">
+									<span class="text-red-500">Delete</span>
+									<i data-feather="trash" class="w-4 h-4 text-red-500"></i>
+								</a>
+							</td>
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/expenses.js' %}"></script>
+{% endblock %}

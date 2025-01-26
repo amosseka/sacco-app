@@ -1,0 +1,159 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block link2 %}
+active-link
+{% endblock %}
+
+{% block header %}
+	
+	<form action="" method="POST" id="comparison-form" class="form-control flex gap-4">
+		{% csrf_token %}
+		<input type="text" name="member-name" placeholder="Search member">
+
+		<button class="border my-2 px-2 rounded-md">
+			<i data-feather="search" class="text-gray-500"></i>
+		</button>
+
+		<a href="/print?context=members&ids={{members_print}}" class="text-gray-500 border px-2 py-1 rounded flex items-center">
+			<i data-feather="printer"></i>
+		</a>
+	</form>
+{% endblock %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">Members</h2>
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		{% if search_term %}
+			<p class="mb-4 text-xs text-gray-500 uppercase">
+				Showing results for - {{search_term}}
+			</p>
+		{% endif %}
+
+		<div class="w-full rounded-xl shadow-xs border mb-4 mt-8">
+			<table class="w-full whitespace-nowrap rounded-xl">
+
+				<thead class="sticky">
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">CLIENT</th>
+						<th class="px-4 py-3">CONTACT</th>
+						<th class="px-4 py-3">DATE JOINED</th>
+						<th class="px-4 py-3">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for member in members %}
+
+						<tr class="text-gray-700 border-t odd:bg-row-odd even:bg-row-even">
+
+							<td class="px-4 py-3">
+								<div class="flex items-center text-sm">
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									<div class="ml-3">
+										<p class="font-semibold">
+											{{member.name_snippet}}
+										</p>
+										<p class="text-sm tracking-wide text-gray-500">
+											{{member.code}}
+										</p>
+									</div>
+								</div>
+							</td>
+
+							<td class="px-4 py-3 text-[15px]">
+								{{member.contact}}
+							</td>
+
+							<td class="px-4 py-3 text-[15px]">
+								{{member.date_joined.date}}
+							</td>
+
+							<td class="px-4 py-3">
+								<ul class="flex">
+									
+									<li class="px-2 relative group">
+										<a href="/{{member.code}}-transactions" class="text-indigo-600">
+											<i data-feather="maximize-2" class="w-5 h-5"></i>
+										</a>
+										<span class="tool-tip">
+											Transactions
+										</span>
+									</li>
+
+									<li class="px-2 relative group">
+										<a href="/new-transaction?action=member-transaction&code={{member.code}}" class="text-indigo-600">
+											<i data-feather="plus-circle" class="w-5 h-5"></i>
+										</a>
+										<span class="tool-tip">
+											New Transaction
+										</span>
+									</li>
+
+									<li class="px-2 relative group">
+										<a href="/{{member.code}}-convert-savings" class="text-indigo-600">
+											<i data-feather="repeat" class="w-5 h-5"></i>
+										</a>
+										<span class="tool-tip">
+											Convert savings to shares
+										</span>
+									</li>
+
+									<li class="px-2 relative group">
+										<a href="/{{member.code}}-pay-using-shares" class="text-indigo-600">
+											<i data-feather="dollar-sign" class="w-5 h-5"></i>
+										</a>
+										<span class="tool-tip">
+											Pay using shares
+										</span>
+									</li>
+
+								</ul>
+							</td>
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+			{% if page_range %}
+
+				<div class="border-t py-4 px-2 flex justify-end paginator">
+					
+					<div class="flex text-gray-500">
+				
+						{% if members.has_previous %}
+							<a href="?page={{members.previous_page_number}}">
+								<i data-feather="chevron-left" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+
+						{% for page in page_range %}
+							{% if page == members.number %}
+								<a href="?page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+							{% else %}
+								<a href="?page={{page}}">{{page}}</a>
+							{% endif %}
+						{% endfor %}
+
+						{% if members.has_next %}
+							<a href="?page={{members.next_page_number}}">
+								<i data-feather="chevron-right" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+					</div>
+
+				</div>
+
+			{% endif %}
+		</div>
+	</main>
+{% endblock %}

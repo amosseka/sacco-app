@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link12 %}
+active-link
+{% endblock %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">Settings</h2>
+{% endblock %}
+
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6 pt-4">
+
+        <div>
+            <h2 class="font-semibold pb-4 text-gray-600">Financial Year</h2>
+            <p class="py-2">Current Financial Year</p>
+            <p class="py-2">{{current_financial_year.first_date.date}} - {{current_financial_year.second_date.date}}</p>
+
+            <form action="" method="GET" class="form-control w-1/2 flex gap-4 items-center mt-2">
+                <input type="hidden" value="choose-financial-year">
+                <select name="financial_year" style="margin: 0 !important;">
+                    {% for year in financial_years %}
+                        <option value="{{year.id}}">{{year}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" style="margin: 0 !important; padding: .6em .2em !important;" value="Change">
+            </form>
+
+        </div>
+
+        <div class="py-2 mt-4 w-1/2">
+            <h2>Add Financial Year</h2>
+            <form action="" method="POST" class="form-control">
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+	</main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'custom_scripts/settings.js' %}"></script>
+{% endblock %}

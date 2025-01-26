@@ -1,0 +1,172 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Dashboard
+    </h2>
+{% endblock %}
+
+
+{% block link1 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto overflow-x-hidden bg-bluish px-6">
+
+
+		<div class="grid gap-6 xl:grid-cols-4 md:grid-cols-2 mt-8">
+			<div class="flex items-center bg-white p-4 rounded-lg shadow-xs border">
+				
+				<div class="p-3 mr-4 rounded-full bg-orange-100 text-orange-500">
+					<i data-feather="users"></i>
+				</div>
+				<div>
+					<p class="text-sm font-medium text-gray-600 mb-2">Total Members</p>
+					<p class="text-lg font-semibold text-gray-700">{{total_members}}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center bg-white p-4 rounded-lg shadow-xs border">
+				<div class="p-3 mr-4 rounded-full bg-green-100 text-green-500">
+					<i data-feather="dollar-sign"></i>
+				</div>
+				<div>
+					<p class="text-sm font-medium text-gray-600 mb-2">Total Transactions</p>
+					<p class="text-lg font-semibold text-gray-700">{{total_transactions}}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center bg-white p-4 rounded-lg shadow-xs border">
+				<div class="p-3 mr-4 rounded-full bg-blue-100 text-blue-500">
+					<i data-feather="check-square"></i>
+				</div>
+				<div>
+					<p class="text-sm font-medium text-gray-600 mb-2">Events Open</p>
+					<p class="text-lg font-semibold text-gray-700">{{total_tulinaawe_open}}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center bg-white p-4 rounded-lg shadow-xs border">
+				<div class="p-3 mr-4 rounded-full bg-teal-100 text-teal-500">
+					<i data-feather="file"></i>
+				</div>
+				<div>
+					<p class="text-sm font-medium text-gray-600 mb-2">Events Closed</p>
+					<p class="text-lg font-semibold text-gray-700">{{total_tulinaawe_closed}}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center bg-white p-4 rounded-lg shadow-xs border">
+				<div class="p-3 mr-4 rounded-full bg-green-100 text-green-500">
+					<i data-feather="dollar-sign"></i>
+				</div>
+				<div>
+					<p class="text-sm font-medium text-gray-600 mb-2">Total Loans</p>
+					<p class="text-lg font-semibold text-gray-700">{{total_loans}}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center bg-white p-4 rounded-lg shadow-xs border">
+				<div class="p-3 mr-4 rounded-full bg-purple-100 text-purple-500">
+					<i data-feather="shopping-bag"></i>
+				</div>
+				<div>
+					<p class="text-sm font-medium text-gray-600 mb-2">Total Receipts</p>
+					<p class="text-lg font-semibold text-gray-700">{{total_expense}}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-4">
+            <h2 class="font-bold pb-4 py-2 text-gray-600">Transactions</h2>
+            <div id="chart-totals" class="mb-4 chart"></div>
+        </div>
+
+		<p class="mt-4 text-xs text-gray-500 uppercase font-semibold">
+			Top 10 transactions
+		</p>
+
+		<div class="w-full rounded-lg shadow-xs border mb-6 mt-6">
+			<table class="w-full whitespace-nowrap">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">CLIENT</th>
+						<th class="px-4 py-3">DATE</th>
+						<th class="px-4 py-3">SHARES</th>
+						<th class="px-4 py-3">SAVINGS</th>
+						<th class="px-4 py-3">WITHDRAW</th>
+						<th class="px-4 py-3">WELFARE</th>
+						<th class="px-4 py-3">FINES</th>
+
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+
+					{% for transaction in transactions %}
+
+					{% if transaction.other == 0 %}
+						<tr class="text-gray-700 border-t even:bg-row-even odd:bg-row-odd">
+
+							<td class="px-4 py-3">
+								<div class="flex items-center text-sm">
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{transaction.member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									<div class="ml-3">
+										<p class="font-semibold">
+											{{transaction.member.name_snippet}}
+										</p>
+										<p class="text-sm tracking-wide text-gray-500">
+											{{transaction.member.code}}
+										</p>
+									</div>
+								</div>
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.date.date}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.shares|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.savings|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.withdraw|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.welfare|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{transaction.fines|intcomma}}
+							</td>
+
+							
+						</tr>
+					{% endif %}
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'scripts/apexcharts.min.js' %}"></script>
+	<script src="{% static 'custom_scripts/dashboard.js' %}"></script>
+{% endblock %}

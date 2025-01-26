@@ -1,0 +1,242 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link7 %}
+active-link
+{% endblock %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">Loans</h2>
+{% endblock %}
+
+{% block header %}
+	
+	<form action="" method="POST" id="comparison-form" class="form-control flex gap-4">
+		{% csrf_token %}
+		<input type="text" name="member-name" placeholder="Search member">
+
+		<button class="border my-2 px-2 rounded-md">
+			<i data-feather="search" class="text-gray-500"></i>
+		</button>
+		
+
+		<!-- <a href="/print?context=members&ids={{print_ids}}" class="text-gray-500 border px-2 py-1 rounded flex items-center">
+			<i data-feather="printer"></i>
+		</a> -->
+	</form>
+{% endblock %}
+
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6 pt-4">
+
+		<div>
+
+			<div class="flex gap-4">
+				<a href="{% url 'main:loan_application' %}" class="button mt-0 ml-0 w-52 mb-4 flex justify-between peer bg-blue-500 hover:bg-blue-600" data-label="form-toggler">
+					<span>New Loan Application</span>
+					<i data-feather="plus" class="w-5 h-5"></i>
+				</a>
+				<button id="print-btn" class="button mt-0 ml-0 mb-4 flex justify-between peer bg-blue-500 hover:bg-blue-600">
+					<span>Print</span>
+					<i data-feather="printer" class="w-5 h-5"></i>
+				</button>
+			</div>
+			
+
+			<div class="w-full rounded-lg shadow-xs border bg-white py-2 px-4 mb-4 h-0 hidden" data-label="form-container">
+
+				<form method="POST" action="" class="form-control" id="loan-form">
+					{% csrf_token %}
+					{{form}}
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			</div>
+
+		</div>
+
+		<div class="py-4 flex gap-2">
+			<a href="?action=paid-loans" class="px-4 block text-gray-500 border rounded border-slate-400 py-1">Paid Loans</a>
+			<a href="?action=unpaid-loans" class="px-4 block text-gray-500 border rounded border-slate-400 py-1">Unpaid Loans</a>
+		</div>
+		<div id="print">
+		<h1 class="mb-4 text-gray-500">{{paid_context}}</h1>
+		<div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white">
+
+			<div class="flex gap-x-20 flex-wrap">
+				
+				<div class="flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">No. of loans</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loans_count}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Amount Taken Out</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_amount|intcomma}}
+						</p>
+					</div>
+				</div>
+				
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Amount Paid</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_amount_paid|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Interest Paid</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_interest|intcomma}}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+        <div class="w-full rounded-lg shadow-xs border mb-6 overflow-x-hidden">
+			<table class="w-full">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">Member</th>
+						<th class="px-4 py-3">Date Due</th>
+						<th class="px-4 py-3">Amount</th>
+						<th class="px-4 py-3">Amount Paid</th>
+						<th class="px-4 py-3">Balance</th>
+						<th id="actions-m" class="px-4 py-3 actions-m">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+	
+					{% for loan in loans %}
+
+						<tr class="text-gray-700 border-t even:bg-row-even odd:bg-row-odd">
+
+							<td class="px-4 py-3">
+								<div class="flex items-center text-sm">
+
+									{% if loan.member != None %}
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{loan.member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									{% else %}
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{% static 'images/klogo.png' %}" class="object-fill rounded-full absolute">
+									</div>
+									{% endif %}
+
+									{% if loan.member != None %}
+										<div class="ml-3">
+											<p class="font-semibold">
+												{{loan.member.name_snippet}}
+											</p>
+											<p class="text-sm tracking-wide text-gray-500">
+												{{loan.member.code}}
+											</p>
+										</div>
+									{% else %}
+									<p class="font-semibold ml-3">
+										{{loan.member_name|upper}}
+									</p>
+									{% endif %}
+									
+								</div>
+							</td>
+
+							<td class="px-4 py-3">{{loan.date_due.date}}</td>
+
+							<td class="px-4 py-3">
+								{{loan.amount|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{loan.amount_paid|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{loan.balance|intcomma}}
+							</td>
+
+							<td id="actions-{{loan.id}}" class="px-4 py-3 actions-m">
+								<div class="px-2 relative group">
+									<a href="{% url 'main:loan_detail' loan.id %}" class="text-indigo-600">
+										<i data-feather="maximize-2" class="w-5 h-5"></i>
+									</a>
+									<span class="tool-tip" style="left: -20%;">
+										Expand
+									</span>
+								</div>
+							</td>
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+			{% if not paid_or_unpaid %}
+			{% if page_range %}
+
+				<div class="border-t py-4 px-2 flex justify-end paginator">
+					
+					<div class="flex text-gray-500">
+				
+						{% if loans.has_previous %}
+							<a href="?page={{loans.previous_page_number}}">
+								<i data-feather="chevron-left" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+
+						{% for page in page_range %}
+							{% if page == loans.number %}
+								<a href="?page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+							{% else %}
+								<a href="?page={{page}}">{{page}}</a>
+							{% endif %}
+						{% endfor %}
+
+						{% if loans.has_next %}
+							<a href="?page={{loans.next_page_number}}">
+								<i data-feather="chevron-right" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+					</div>
+
+				</div>
+
+			{% endif %}
+			{% endif %}
+
+		</div>
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/loans.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Print</title>
+	<!-- <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/output.css' %}"> -->
+	<link rel="stylesheet" type="text/css" href="{% static 'stylesheets/print.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/fontello/fontello.css' %}">
+</head>
+<body>
+
+	<header>
+		<h1>KAZINGA YOUTH DEVELOPMENT INITIATIVE</h1>
+
+		<p>
+			<span class="icon-home-6"></span>
+			<span>Kazinga Cell, Kasinga Ward, Kyengera Town Council, Wakiso District</span>
+		</p>
+		<p>
+			<span class="icon-phone-3"></span>
+			<span>+256751098364, +256774180050, +256758738447</span>
+		</p>
+		<p>
+			<span class="icon-mail-8"></span>
+			<span>kazingayouthdevi@gmail.com</span>
+		</p>
+		<div class="logo">
+			<img src="{% static 'images/Klogo.png' %}">
+		</div>
+	</header>
+
+	<table class="wrapper">
+		<thead>
+			<tr>
+				<td>
+					<div class="header-space">&nbsp</div>
+				</td>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<div class="body">
+
+						<div class="table-area">
+							{% if member_transactions %}
+								<input type="hidden" name="previous-page" value="{{member.code}}-transactions">
+								<table>
+
+									<thead>
+										<tr>
+											<th>DATE</th>
+											<th>SHARES</th>
+											<th>SAVINGS</th>
+											<th>WITHDRAW</th>
+											<th>WELFARE</th>
+											<th>FINES</th>
+										</tr>
+									</thead>
+					
+									<tbody>
+										
+										{% for  key, transaction in member_transactions.items %}
+					
+											<tr>
+												<td>{{transaction.date.date}}</td>
+					
+												<td>{{transaction.shares}}</td>
+					
+												<td>{{transaction.savings|intcomma}}</td>
+					
+												<td>{{transaction.withdraw|intcomma}}</td>
+					
+												<td>{{transaction.welfare|intcomma}}</td>
+					
+												<td>{{transaction.fines|intcomma}}</td>
+					
+											</tr>
+					
+										{% endfor %}
+									
+									</tbody>
+								</table>
+							
+							{% elif transactions %}
+
+								<table class="w-full whitespace-nowrap">
+
+									<thead>
+										<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b">
+											<th class="px-4 py-3">CLIENT</th>
+											<th class="px-4 py-3">DATE</th>
+											<th class="px-4 py-3">SHARES</th>
+											<th class="px-4 py-3">SAVINGS</th>
+											<th class="px-4 py-3">WITHDRAW</th>
+											<th class="px-4 py-3">WELFARE</th>
+											<th class="px-4 py-3">FINES</th>
+										</tr>
+									</thead>
+					
+									<tbody class="bg-white">
+					
+										{% for key, transaction in transactions.items %}
+					
+											<tr class="text-gray-700 border-t last:border-b">
+					
+												<td class="px-4 py-3">
+													<div class="flex items-center text-sm">
+														<div class="w-10 h-10 rounded-full relative overflow-hidden">
+															<img src="{{transaction.member.image.url}}" class="object-fill rounded-full absolute">
+														</div>
+														<div class="ml-3">
+															<p class="font-semibold">
+																{{transaction.member.first_name|title}}
+																{{transaction.member.last_name|title}}
+															</p>
+															<p class="text-sm tracking-wide text-gray-500">KYDI/001</p>
+														</div>
+													</div>
+												</td>
+					
+												<td class="px-4 py-3">
+													{{transaction.date.date}}
+												</td>
+					
+												<td class="px-4 py-3">
+													{{transaction.shares|intcomma}}
+												</td>
+					
+												<td class="px-4 py-3">
+													{{transaction.savings|intcomma}}
+												</td>
+					
+												<td class="px-4 py-3">
+													{{transaction.withdraw|intcomma}}
+												</td>
+					
+												<td class="px-4 py-3">
+													{{transaction.welfare|intcomma}}
+												</td>
+					
+												<td class="px-4 py-3">
+													{{transaction.fines|intcomma}}
+												</td>
+											</tr>
+					
+										{% endfor %}
+					
+									</tbody>
+					
+								</table>
+
+							{% elif members %}
+
+							<table class="w-full whitespace-nowrap">
+
+								<thead>
+									<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b">
+										<th class="px-4 py-3">CLIENT</th>
+										<th class="px-4 py-3">CONTACT</th>
+										<th class="px-4 py-3">DATE JOINED</th>
+									</tr>
+								</thead>
+				
+								<tbody class="bg-white">
+									{% for member in members %}
+				
+										<tr class="text-gray-700 border-t">
+				
+											<td class="px-4 py-3">
+												<div class="flex items-center text-sm">
+													<div class="w-10 h-10 rounded-full relative overflow-hidden">
+														<img src="{{member.image.url}}" class="object-fill rounded-full absolute">
+													</div>
+													<div class="ml-3">
+														<p class="font-semibold">
+															{{member.first_name}} {{member.last_name}}
+														</p>
+														<p class="text-sm tracking-wide text-gray-500">
+															{{member.code}}
+														</p>
+													</div>
+												</div>
+											</td>
+				
+											<td class="px-4 py-3">
+												{{member.contact}}
+											</td>
+				
+											<td class="px-4 py-3">
+												{{member.date_joined.date}}
+											</td>
+										</tr>
+				
+									{% endfor %}
+				
+								</tbody>
+				
+							</table>
+							{% endif %}
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+
+		<tfoot>
+			<tr>
+				<td><div class="footer-space">&nbsp</div></td>
+			</tr>
+		</tfoot>
+		
+	</table>
+	
+	<footer>
+		<div class="signatures">
+			<p>Chairman: <span></span></p>
+			<p>Finance Minister: <span></span></p>
+		</div>
+		<p class="slogan">"Our Youth Our Future"</p>
+	</footer>
+
+	<script src="{% static 'custom_scripts/print.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link13 %}
+active-link
+{% endblock %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">Welfare</h2>
+{% endblock %}
+
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6 pt-4">
+
+        <button id="print-btn" class="button mt-0 ml-0 mb-4 flex justify-between peer bg-blue-500 hover:bg-blue-600">
+			<span>Print</span>
+			<i data-feather="printer" class="w-5 h-5"></i>
+		</button>
+
+		<div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white">
+
+			<div class="flex gap-x-20 flex-wrap">
+				
+				<div class="flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">No. of Members</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_members|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Welfare Expected</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_welfare|intcomma}}
+						</p>
+					</div>
+				</div>
+				
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Welfare Paid</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_welfare_paid|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Welfare Balance</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_welfare_balance|intcomma}}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+        <div id="print">
+
+        <div class="w-full rounded-lg shadow-xs border mb-6 overflow-x-hidden">
+			<table class="w-full">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">Member</th>
+						<th class="px-4 py-3">Amount Paid</th>
+						<th class="px-4 py-3">Balance</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+	
+					{% for member, values in welfares.items %}
+
+						<tr class="text-gray-700 border-t even:bg-row-even odd:bg-row-odd">
+
+							<td class="px-4 py-4">
+								<div class="flex items-center text-sm">
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									<div class="ml-3">
+										<p class="font-semibold">
+											{{member.name_snippet|title}}
+										</p>
+										<p class="text-sm tracking-wide text-gray-500">
+											{{member.code}}
+										</p>
+									</div>
+								</div>
+							</td>
+
+							<td class="px-4 py-3">
+								{{values.welfare|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{values.balance|intcomma}}
+							</td>
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+			{% if not paid_or_unpaid %}
+			{% if page_range %}
+
+				<div class="border-t py-4 px-2 flex justify-end paginator">
+					
+					<div class="flex text-gray-500">
+				
+						{% if loans.has_previous %}
+							<a href="?page={{loans.previous_page_number}}">
+								<i data-feather="chevron-left" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+
+						{% for page in page_range %}
+							{% if page == loans.number %}
+								<a href="?page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+							{% else %}
+								<a href="?page={{page}}">{{page}}</a>
+							{% endif %}
+						{% endfor %}
+
+						{% if loans.has_next %}
+							<a href="?page={{loans.next_page_number}}">
+								<i data-feather="chevron-right" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+					</div>
+
+				</div>
+
+			{% endif %}
+			{% endif %}
+
+		</div>
+
+        </div>
+
+	</main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'custom_scripts/welfare.js' %}"></script>
+{% endblock %}

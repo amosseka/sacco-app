@@ -1,0 +1,644 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link2 %}
+active-link
+{% endblock %}
+
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">Member Transactions</h2>
+{% endblock %}
+
+
+{% block header %}
+	
+	<form action="" method="POST" id="comparison-form" class="form-control flex gap-4">
+		{% csrf_token %}
+		<select name="comparison">
+			<option value="none">Sort</option>
+			<option value="after">After</option>
+			<option value="before">Before</option>
+			<option value="equal">Equal</option>
+			<option value="month">Month</option>
+			<option value="between">Between</option>
+		</select>
+		<input type="date" name="date_1">
+
+		<button class="border my-2 px-2 rounded-md" title="Search">
+			<i data-feather="search" class="text-gray-500"></i>
+		</button>
+
+		<a class="text-gray-500 border px-2 py-1 rounded flex items-center" style="cursor: pointer;" title="Print" id="print-btn">
+			<i data-feather="printer"></i>
+		</a>
+
+		<!-- <a href="/member-report?code={{member.code}}" class="text-gray-500 flex items-center rounded px-2 py-1 border" title="Generate Report">
+			<i data-feather="book"></i>
+		</a> -->
+	</form>
+{% endblock %}
+
+{% block modal %}
+
+{% include 'main/modals/delete_modal.html' %}
+
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+	
+		<div class="w-full gap-x-16 rounded-lg shadow-xs border flex mb-6 p-3 bg-white mt-8">
+
+			<div class="flex">
+				<div class="w-32 h-32 rounded-full object-fill overflow-hidden">
+					<img src="{{member.image.url}}">
+				</div>
+
+				<div class="ml-4 min-w-max">
+					<h4 class="font-semibold text-base text-gray-700">
+						{{member.name_snippet|title}}
+					</h4>
+					<p class="text-gray-600 text-sm">{{member.code}}</p>
+					<p class="text-gray-600 text-sm">{{member.contact}}</p>
+					<p class="text-gray-600 text-sm">{{member.date_joined.date}}</p>
+
+					<a href="/update-member?member-code={{member.code}}" class="flex rounded-full w-24 py-0.5 mt-4 items-center text-gray-500 hover:text-blue-600 transition-all" id="edit-profile">
+						<i data-feather="edit-2" class="h-4 w-4 mx-1"></i>
+						<span>Edit</span>
+					</a>
+
+				</div>
+			</div>
+
+			<div class="relative">
+
+				<div class="grid gap-x-12 gap-y-4 lg:grid-cols-3 md:grid-cols-1">
+					
+					<div class="min-w-max flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+							<i data-feather="package" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Shares</p>
+							<p class="text-base font-semibold text-gray-700">
+								{% if totals %}
+									{{totals.shares|intcomma}} = {{totals.share_value|intcomma}}
+								{% else %}
+									{{shares|intcomma}} = {{shares_value|intcomma}}
+								{% endif %}
+							</p>
+						</div>
+					</div>
+
+
+					<div class="min-w-max flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+							<i data-feather="package" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Withdrawn Shares</p>
+							<p class="text-base font-semibold text-gray-700">
+								{% if totals %}
+									{{totals.shares_withdraw|intcomma}} = {{totals.shares_withdraw_value|intcomma}}
+								{% else %}
+									{{shares_withdraw|intcomma}} = {{shares_withdraw_value|intcomma}}
+								{% endif %}
+							</p>
+						</div>
+					</div>
+
+
+					<div class="min-w-max flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+							<i data-feather="package" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Net Shares</p>
+							<p class="text-base font-semibold text-gray-700">
+								{% if totals %}
+									{{totals.net_shares|intcomma}} = {{totals.net_shares_value|intcomma}}
+								{% else %}
+									{{net_shares|intcomma}} = {{net_shares_value|intcomma}}
+								{% endif %}
+							</p>
+						</div>
+					</div>
+
+
+					<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+							<i data-feather="dollar-sign" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Savings</p>
+							<p class="text-base font-semibold text-gray-700">
+								{% if totals %}
+									{{totals.savings|intcomma}}
+								{% else %}
+									{{savings|intcomma}}
+								{% endif %}
+							</p>
+						</div>
+					</div>
+
+					<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+							<i data-feather="upload" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Withdraw</p>
+							<p class="text-base font-semibold text-gray-700">
+							{% if totals %}
+								{{totals.withdraw|intcomma}}
+							{% else %}
+								{{withdraw|intcomma}}
+							{% endif %}
+							</p>
+						</div>
+					</div>
+
+					<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+							<i data-feather="smile" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Welfare</p>
+							<p class="text-base font-semibold text-gray-700">
+							{% if totals %}
+								{{totals.welfare|intcomma}}
+							{% else %}
+								{{welfare|intcomma}}
+							{% endif %}
+							</p>
+						</div>
+					</div>
+
+					<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+							<i data-feather="credit-card" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Fines</p>
+							<p class="text-base font-semibold text-gray-700">
+							{% if totals %}
+								{{totals.fines|intcomma}}
+							{% else %}
+								{{fines|intcomma}}
+							{% endif %}
+							</p>
+						</div>
+					</div>
+
+					<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+							<i data-feather="credit-card" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Other</p>
+							<p class="text-base font-semibold text-gray-700">
+							{% if totals %}
+								{{totals.other|intcomma}}
+							{% else %}
+								{{other|intcomma}}
+							{% endif %}
+							</p>
+						</div>
+					</div>
+
+					<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+						<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+							<i data-feather="dollar-sign" class="h-5 w-5"></i>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-600">Total Project Fee</p>
+							<p class="text-base font-semibold text-gray-700">
+							{% if totals %}
+								{{totals.project_fee|intcomma}}
+							{% else %}
+								{{project_fee|intcomma}}
+							{% endif %}
+							</p>
+						</div>
+					</div>
+
+					{% if membership_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Membership</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{membership_value|intcomma}}
+								</p>
+							</div>
+						</div>
+					{% endif %}
+
+					{% if chairs_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Chairs</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{chairs_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if loans_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Loans</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{loans_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if uniforms_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Uniforms</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{uniforms_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if renewal_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Membership Renewal</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{renewal_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if loan_form_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Loan Forms</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{loan_form_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+
+					{% if plates_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Plates</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{plates_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if closing_balance_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Closing Balance</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{closing_balance_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if project_fee_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Project Fee</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{project_fee_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if tents_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">Tents</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{tents_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+
+					{% if pas_present %}
+						<div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+							<div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+								<i data-feather="credit-card" class="h-5 w-5"></i>
+							</div>
+							<div>
+								<p class="text-sm font-medium text-gray-600">PAS</p>
+								<p class="text-base font-semibold text-gray-700">
+									{{pas_value|intcomma}}
+								</p>
+							</div>
+						</div>	
+					{% endif %}
+					
+				</div>
+			</div>
+
+		</div>
+
+		{% if search_term %}
+			<p class="mb-4 text-xs text-gray-500 uppercase pl-4">
+				<span class="font-semibold">Showing results for -</span> 
+				<span class="text-sm">
+					{{search_term}} {{date_1|date:"D jS, N Y"}} 
+					{% if date_2 %}
+					and 
+					{{date_2|date:"D jS, N Y"}}
+					{% endif %}
+				</span>
+			</p>
+		{% endif %}
+
+		{% if member.code == 'KYDI/000' %}
+			<div class="mb-4 flex gap-4">
+				{% if loans_present %}
+					<a href="?loans=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Loans</a>
+				{% else %}
+					<a href="?loans=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Loans</a>
+				{% endif %}
+				{% if loan_form_present %}
+					<a href="?loan_form=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Loan Forms</a>
+				{% else %}
+					<a href="?loan_form=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Loan Forms</a>
+				{% endif %}
+				{% if membership_present %}
+					<a href="?membership=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Membership</a>
+				{% else %}
+					<a href="?membership=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Membership</a>
+				{% endif %}
+				{% if chairs_present %}
+					<a href="?chairs=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Chairs</a>
+				{% else %}
+					<a href="?chairs=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Chairs</a>
+				{% endif %}
+				{% if uniforms_present %}
+					<a href="?uniforms=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Uniforms</a>
+				{% else %}
+					<a href="?uniforms=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Uniforms</a>
+				{% endif %}
+				{% if renewal_present %}
+					<a href="?renewal=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Renewal</a>
+				{% else %}
+					<a href="?renewal=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Renewal</a>
+				{% endif %}
+				{% if plates_present %}
+					<a href="?plates=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Plates</a>
+				{% else %}
+					<a href="?plates=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Plates</a>
+				{% endif %}
+				{% if closing_balance_present %}
+					<a href="?closing_balance=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Closing Balance</a>
+				{% else %}
+					<a href="?closing_balance=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Closing Balance</a>
+				{% endif %}
+                {% if project_fee_present %}
+					<a href="?project_fee=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Project Fee</a>
+				{% else %}
+					<a href="?project_fee=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Project Fee</a>
+				{% endif %}
+				{% if tents_present %}
+					<a href="?tents=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Tents</a>
+				{% else %}
+					<a href="?tents=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">Tents</a>
+				{% endif %}
+				{% if pas_present %}
+					<a href="?pas=True" class="text-blue-500 block border-b-[2px] border-b-blue-500 w-max mb-4">PAS</a>
+				{% else %}
+					<a href="?pas=True" class="text-gray-500 block border-b-[2px] border-b-blue-500 w-max mb-4">PAS</a>
+				{% endif %}
+			</div>
+		{% endif %}
+
+		<div class=" rounded-lg shadow-xs border mb-6 overflow-x-hidden">
+			<table class="w-full whitespace-nowrap">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">DATE</th>
+						<th class="px-4 py-3">SHARES</th>
+						<th class="px-4 py-3">WELFARE</th>
+						<th class="px-4 py-3">SAVINGS</th>
+						<th class="px-4 py-3">WITHDRAW</th>
+						<th class="px-4 py-3">PROJECT FEE</th>
+						<th class="px-4 py-3">FINES</th>
+						<th class="px-4 pl-12 py-3" id="actions-th">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for transaction in member_transactions %}
+
+						{% if transaction.other == 0 %}
+						<tr class="text-gray-600 border-t last:border-b odd:bg-row-odd even:bg-row-even">
+
+							<td class="px-4 py-4 text-[15px]">
+								{{transaction.date.date}}
+							</td>
+
+							<td class="px-4 py-4 shares" value="{{transaction.shares}}">
+								{{transaction.shares}}
+							</td>
+
+                            <td class="px-4 py-4">
+								{{transaction.welfare|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.savings|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.withdraw|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.project_fee|intcomma}}
+							</td>
+
+							<td class="px-4 py-4">
+								{{transaction.fines|intcomma}}
+							</td>
+
+							<td class="px-4 py-4 actions" id="action-{{forloop.counter}}">
+								<div class="flex items-center gap-6 pl-4">
+                                    <a href="{% url 'main:transaction_detail' transaction.id %}" title="View">
+                                        <i data-feather="eye" class="w-5 h-5 text-cyan-500"></i>
+                                    </a>
+                                    <a href="/new-transaction/?action=edit&id={{transaction.id}}" title="Edit">
+                                        <i data-feather="edit-3" class="w-5 h-5 text-indigo-500"></i>
+                                    </a>
+                                    <a href="#" title="Delete" data="{{transaction.id}}" member="{{transaction.member.code}}" class="transaction-del-btn">
+                                        <i data-feather="trash" class="w-5 h-5 text-red-500"></i>
+                                    </a>
+								</div>
+							</td>
+						</tr>
+						{% endif %}
+					{% endfor %}
+				
+				</tbody>
+			</table>
+
+			{% if other_present %}
+
+			<h2 class="font-semibold text-gray-500 px-3 py-4">Other Transactions</h2>
+
+			<table class="w-full group">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">DATE</th>
+						<th class="px-4 py-3">AMOUNT</th>
+						<th class="px-4 py-3">REASON</th>
+						<th class="px-4 py-3">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for transaction in member_transactions %}
+
+						{% if transaction.other > 0 %}
+						<tr class="text-gray-700 border-t last:border-b odd:bg-row-odd even:bg-row-evenlast:border-b">
+
+							<td class="px-4 py-5">
+								{{transaction.date.date}}
+							</td>
+
+							<td class="px-4 py-5">
+								{{transaction.other|intcomma}}
+							</td>
+
+							<td class="px-4 py-5" style="max-width: 600px;">
+								<div>
+									{{transaction.notes|linebreaks}}
+								</div>
+							</td>
+
+							<td>
+								<div class="flex items-center gap-6 px-4">
+                                    <a href="#" title="View">
+                                        <i data-feather="eye" class="w-5 h-5 text-cyan-500"></i>
+                                    </a>
+                                    <a href="/new-transaction/?action=edit&id={{transaction.id}}" title="Edit">
+                                        <i data-feather="edit-3" class="w-5 h-5 text-indigo-500"></i>
+                                    </a>
+                                    <a href="#" title="Delete" data="{{transaction.id}}" member="{{transaction.member.code}}" class="transaction-del-btn">
+                                        <i data-feather="trash" class="w-5 h-5 text-red-500"></i>
+                                    </a>
+								</div>
+							</td>
+						</tr>
+						{% endif %}
+
+					{% endfor %}
+					</tbody>
+			</table>
+
+			{% endif %}
+
+			{% if page_range %}
+
+				<div class="py-4 px-2 flex justify-end paginator" id="pagination-navigation">
+					
+					<div class="flex text-gray-500">
+				
+						{% if member_transactions.has_previous %}
+							{% if membership_present %}
+								<a href="?membership=True&page={{member_transactions.previous_page_number}}">
+									<i data-feather="chevron-left" class="w-5 h-5"></i>
+								</a>
+							{% else %}
+								<a href="?page={{member_transactions.previous_page_number}}">
+									<i data-feather="chevron-left" class="w-5 h-5"></i>
+								</a>
+							{% endif %}
+							
+						{% endif %}
+
+						{% for page in page_range %}
+							{% if membership_present %}
+								{% if page == member_transactions.number %}
+									<a href="?membership=True&page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+								{% else %}
+									<a href="?membership=True&page={{page}}">{{page}}</a>
+								{% endif %}
+							{% else %}
+								{% if page == member_transactions.number %}
+									<a href="?page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+								{% else %}
+									<a href="?page={{page}}">{{page}}</a>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+
+						{% if member_transactions.has_next %}
+							{% if membership_present %}
+								<a href="?membership=True&page={{member_transactions.next_page_number}}">
+									<i data-feather="chevron-right" class="w-5 h-5"></i>
+								</a>
+							{% else %}
+								<a href="?page={{member_transactions.next_page_number}}">
+									<i data-feather="chevron-right" class="w-5 h-5"></i>
+								</a>
+							{% endif %}
+						{% endif %}
+					</div>
+
+				</div>
+
+			{% endif %}
+
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/member_transactions.js' %}"></script>
+{% endblock %}

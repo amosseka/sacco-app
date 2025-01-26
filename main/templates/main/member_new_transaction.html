@@ -1,0 +1,106 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<div class="flex gap-4">
+			<h2 class="mt-4 mb-3 text-xl font-semibold text-gray-600">Add Transaction</h2>
+
+			<div class="mt-4 mb-3">
+
+				<button id="general-transaction" class="active-t">
+					General Transaction
+				</button>
+
+				<button id="other-transaction" class="ml-4 inactive-t">
+					Other Transaction
+				</button>
+			</div>
+		</div>
+
+		<div class="w-full rounded-lg shadow-xs border bg-white py-2 px-4 mb-4">
+			<input type="hidden" value="{{latest_date|date:"Y-m-d"}}" id="latest_date">
+			<form method="POST" action="" id="transaction-add-form" class="form-control">
+
+				{% csrf_token %}
+				<input type="hidden" name="user-no-conflict" value="{{user}}">
+
+				<div class="grid grid-cols-2 gap-8">
+					<div>
+
+						<div class="text-sm mt-4 pl-1">
+							<p data="full-name" class="font-semibold">
+								{{member.first_name}} {{member.last_name}}
+							</p>
+							<div class="w-48 h-48 mt-4">
+								<img src="{{member.image.url}}" data="image">
+							</div>
+						</div>
+
+						<div class="flex gap-4 mt-6">
+							<input id="use-last-date" type="checkbox" style="appearance: checkbox; width: 16px; padding: 0; margin: 0; outline: none; border: none;">
+							<label for="use-last-date" style="margin:0;">Use previous date</label>
+						</div>
+
+						<label for="id_date" style="margin-top: 1.4rem;">Date</label>
+						{{form.date}}
+						{{form.date.errors}}
+
+						<div data-label="welfare">
+							<label for="id_welfare">Welfare</label>
+							{{form.welfare}}
+							{{form.welfare.errors}}
+						</div>
+
+					</div>
+
+					<div data-label="control-1" class="block">
+
+						<label for="id_shares">Shares</label>
+						{{form.shares}}
+						{{form.shares.errors}}
+
+						<label for="id_savings">Savings</label>
+						{{form.savings}}
+						{{form.savings.errors}}
+
+						<label for="id_withdraw">Withdraw</label>
+						{{form.withdraw}}
+						{{form.withdraw.errors}}
+
+						<label for="id_fines">Fines</label>
+						{{form.fines}}
+						{{form.fines.errors}}
+
+						<label for="id_fine_type">Fine Type</label>
+						{{form.fine_type}}
+						{{form.fine_type.errors}}
+
+					</div>
+
+					<div data-label="control-2" class="hidden">
+						<label for="id_fines">Other</label>
+						{{form.other}}
+						{{form.other.errors}}
+
+						<label for="id_fine_type">Reason</label>
+						{{form.other_reason}}
+						{{form.other_reason.errors}}
+					</div>
+				</div>
+
+				<div class="flex items-center justify-end">
+					
+					<input class="ml-0" type="submit" name="submit" value="Submit">
+					
+				</div>
+
+			</form>
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/member_new_transaction.js' %}"></script>
+{% endblock %}

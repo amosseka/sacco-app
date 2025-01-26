@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>KYDI</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'stylesheets/output.css' %}">
+	<link rel="stylesheet" href="{% static 'fonts/inter/font.css' %}">
+	<link rel="stylesheet" href="{% static 'stylesheets/custom.css' %}">
+</head>
+<body>
+
+	<div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 mt-16">
+
+		<div class="mx-auto max-w-lg">
+
+		<h1 class="text-center text-xl font-bold text-indigo-600 ">
+			KAZINGA YOUTH DEVELOPMENT INITIATIVE
+		</h1>
+	
+		<form action="{% url 'main:login' %}" method="POST" class="mt-6 mb-0 space-y-4 rounded-lg p-8 shadow-2xl" id="login-form">
+			
+			{% csrf_token %}
+
+			<p class="text-lg font-medium">Sign in to your account</p>
+	
+			<div>
+			<label for="username" class="text-sm font-medium">Username</label>
+	
+			<div class="relative mt-2">
+				{{form.username}}
+			</div>
+			</div>
+	
+			<div>
+			<label for="password" class="text-sm font-medium">Password</label>
+	
+			<div class="relative mt-2">
+				{{form.password}}
+	
+			</div>
+			</div>
+	
+			<button
+			type="submit"
+			class="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
+			>
+			Sign in
+			</button>
+	
+			
+		</form>
+		</div>
+	</div>
+  
+
+</body>
+</html>

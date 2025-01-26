@@ -1,0 +1,197 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link7 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<h2 class="my-6 text-xl font-semibold text-gray-600">Loan</h2>
+
+        <div>
+
+			<div class="flex mb-4 gap-4">
+
+				<button class="button mt-0 ml-0 w-40 flex justify-between bg-blue-500" data-label="form-toggler">
+					<span>New Payment</span>
+					<i data-feather="plus" class="w-5 h-5"></i>
+				</button>
+
+				<a href="{% url 'main:loan_application_detail' loan.id %}" class="button mt-0 ml-0 w-[14rem] flex justify-between bg-blue-400 hover:bg-blue-500 cursor-pointer">
+					<span>View Loan Application</span>
+					<i data-feather="external-link" class="w-5 h-5"></i>
+				</a>
+
+				<a href="?action=delete&modal=loan" class="button mt-0 ml-0 w-[6.5rem] flex justify-between bg-red-400 hover:bg-red-500 cursor-pointer">
+					<span>Delete</span>
+					<i data-feather="trash" class="w-5 h-5"></i>
+				</a>
+				
+			</div>
+
+			<div class="w-full rounded-lg shadow-xs border bg-white py-2 px-4 mb-4 h-0 hidden" data-label="form-container">
+
+				<form method="POST" action="" class="form-control ">
+					{% csrf_token %}
+					{{form}}
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			</div>
+
+		</div>
+
+        <div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white flex gap-16">
+
+            <div class="flex">
+				{% if loan.member != None %}
+				<div class="w-32 h-32 rounded-full object-fill overflow-hidden">
+					<img src="{{loan.member.image.url}}">
+				</div>
+				{% else %}
+				<div class="w-32 h-32 rounded-full object-fill overflow-hidden">
+					<img src="{% static 'images/klogo.png' %}">
+				</div>
+				{% endif %}
+
+				{% if loan.member != None %}
+					<div class="ml-4 min-w-max">
+						<h4 class="font-semibold text-base text-gray-700">
+							{{loan.member.name_snippet}}
+						</h4>
+						<p class="text-gray-600 text-sm">{{loan.member.code}}</p>
+						<p class="text-gray-600 text-sm">{{loan.member.contact}}</p>
+						<p class="text-gray-600 text-sm">{{loan.member.date_joined.date}}</p>
+
+					</div>
+				{% else %}
+					<h4 class="font-semibold text-base text-gray-700">
+						{{loan.member_name}}
+					</h4>
+				{% endif %}
+			</div>
+
+			<div class="grid grid-cols-3 w-full gap-y-4">
+				
+				<div class="flex flex-wrap bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div class="p-1">
+						<p class="text-sm font-medium text-gray-600">Total Amount</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loan.amount|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Amount Paid</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loan.amount_paid|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-purple-100 text-purple-500">
+						<i data-feather="briefcase" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Balance</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loan.balance|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="clock" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Interest</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loan.interest|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="clock" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Date taken out</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loan.date_taken_out.date}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-purple-100 text-purple-500">
+						<i data-feather="clock" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Date due</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{loan.date_due.date}}
+						</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+        <div class="w-full rounded-lg shadow-xs border mb-4">
+			<table class="w-full whitespace-nowrap">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 bg-row-even">
+						<th class="px-4 py-3">Date</th>
+						<th class="px-4 py-3">Amount</th>
+						<th class="px-4 py-3">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for loan_payment in loan_payments %}
+
+						<tr class="text-gray-700 border-t">
+
+							<td class="px-4 py-3">
+								{{loan_payment.date.date}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{loan_payment.amount|intcomma}}
+							</td>
+
+							<td class="px-4 py-3">
+								<a href="?action=delete&modal=loan-payment&id={{loan_payment.id}}" title="Delete" class="flex items-center gap-2">
+									<span class="text-red-500">Delete</span>
+									<i data-feather="trash" class="w-4 h-4 text-red-500"></i>
+								</a>
+							</td>
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/tulinaawe.js' %}"></script>
+{% endblock %}

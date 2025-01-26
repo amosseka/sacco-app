@@ -1,0 +1,157 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Expenses
+    </h2>
+{% endblock %}
+
+{% block link9 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6 pt-4">
+
+		<div>
+
+			<button class="button mt-0 ml-0 w-36 mb-4 flex justify-between peer" data-label="form-toggler">
+				<span>New Receipt</span>
+				<i data-feather="plus" class="w-5 h-5"></i>
+			</button>
+
+			<div class="w-full rounded-lg shadow-xs border bg-white py-2 px-4 mb-4 h-0 hidden" data-label="form-container">
+
+				<form method="POST" action="" class="form-control" id="expenses-form">
+					{% csrf_token %}
+					{{form}}
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			</div>
+
+		</div>
+		
+		<div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white">
+
+			<div class="flex gap-20 flex-wrap">
+				
+				<div class="flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Receipts</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{receipts.count}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Amount</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_amount|intcomma}}
+						</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+        <div class="w-full rounded-lg shadow-xs border mb-6 overflow-x-hidden">
+			<table class="w-full table-auto">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 border-b bg-row-even">
+						<th class="px-4 py-3">SR. NO</th>
+						<th class="px-4 py-3">DATE</th>
+						<th class="px-4 py-3">FROM</th>
+						<th class="px-4 py-3">TO</th>
+						<th class="px-4 py-3">ITEMS NO.</th>
+						<th class="px-4 py-3">TOTAL VALUE</th>
+						<th class="px-4 py-3">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+	
+					{% for receipt in receipts %}
+
+						<tr class="text-gray-700 border-t odd:bg-row-odd even:bg-row-even">
+
+							<td class="px-4 py-5">{{receipt.receipt_no}}</td>
+
+							<td class="px-4 py-5 text-[15px]">{{receipt.date.date}}</td>
+
+							<td class="px-4 py-5 text-[15px]">{{receipt.get_from}}</td>
+
+							<td class="px-4 py-5 text-[15px]">{{receipt.get_to}}</td>
+
+							<td class="px-4 py-5">{{receipt.items_no}}</td>
+
+							<td class="px-4 py-5">{{receipt.total_amount|intcomma}}</td>
+
+							<td class="px-4 py-5 flex justify-start">
+								<div class="px-2 relative group">
+									<a href="{% url 'main:expenses_detail' receipt.id %}" class="text-indigo-600">
+										<i data-feather="maximize-2" class="w-5 h-5"></i>
+									</a>
+									<span class="tool-tip">
+										Expand
+									</span>
+								</div>
+							</td>
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+			{% if page_range %}
+
+				<div class="border-t py-4 px-2 flex justify-end paginator">
+					
+					<div class="flex text-gray-500">
+				
+						{% if events.has_previous %}
+							<a href="?page={{events.previous_page_number}}">
+								<i data-feather="chevron-left" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+
+						{% for page in page_range %}
+							{% if page == events.number %}
+								<a href="?page={{page}}" class="bg-blue-50 text-blue-500">{{page}}</a>
+							{% else %}
+								<a href="?page={{page}}">{{page}}</a>
+							{% endif %}
+						{% endfor %}
+
+						{% if events.has_next %}
+							<a href="?page={{events.next_page_number}}">
+								<i data-feather="chevron-right" class="w-5 h-5"></i>
+							</a>
+						{% endif %}
+					</div>
+
+				</div>
+
+			{% endif %}
+
+		</div>
+
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/expenses.js' %}"></script>
+{% endblock %}

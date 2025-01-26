@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+	* {
+		font-family: Inter;
+	}
+
+	::-webkit-scrollbar {
+		width: 4px;
+	}
+	
+	::-webkit-scrollbar-track {
+		background: #f1f1f1;
+	}
+	
+	::-webkit-scrollbar-thumb {
+		background: #ccc;
+		border-radius: 1em;
+	}
+	
+	::-webkit-scrollbar-thumb:hover {
+		background: rgb(114, 111, 111);
+	}
+
+	form input {
+		display: block;
+		appearance: none;
+    	background-color: #fff;
+    	border-color: #e2e8f0;
+    	border-width: 1px;
+    	border-radius: 0.25rem;
+    	padding: 0.5rem 0.75rem;
+    	line-height: 1.5
+	}
+
+	form label {
+		display: block;
+	}
+
+	form input[type="submit"] {
+		cursor: pointer;
+	}
+
+	
+
+	.form-control input, select, textarea {
+		@apply block w-full text-sm shadow-sm border border-gray-400 border-opacity-80 text-gray-600 px-3 py-2.5 my-2 rounded outline-none focus:shadow-none focus:ring-indigo-500 focus:border-white focus:ring-2;
+	}
+
+	.form-control input[type="submit"], .button {
+		@apply ml-auto mt-8 w-24 py-2 px-4 border border-transparent shadow-sm text-white text-sm font-medium rounded-md bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+	}
+
+	.form-control label {
+		@apply text-slate-800 text-sm font-medium mt-5 mb-3;
+	}
+
+	.form-control label:nth-of-type(1) {
+		@apply mt-2;
+	}
+
+	.tool-tip {
+		@apply invisible opacity-0 absolute bg-tooltip text-sm text-white rounded-md py-0.5 px-4 group-hover:visible group-hover:opacity-100 shadow;
+		bottom: 125%;
+		left: -100%;
+	}
+
+	.errorlist {
+		color: red;
+		@apply text-sm mt-2;
+	}
+
+	div.dcsic_wrapper span {
+		background-color: #fff !important;
+	}
+
+	.paginator a {
+		@apply w-10 h-10 border border-gray-300 border-l-0 first:border-l first:rounded-tl-md first:rounded-bl-md last:rounded-tr-md last:rounded-br-md flex items-center justify-center;
+	}
+
+    .active-link {
+        @apply bg-blue-500 bg-opacity-20 rounded;
+        --tw-text-opacity: 1;
+        color: rgb(99 102 241 / var(--tw-text-opacity)) !important;
+    }
+
+	.active-link ~ span {
+		display: block !important;
+	}
+
+	#login-form input[type="text"], #login-form input[type="password"] {
+		@apply w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm;
+	}
+
+	#tulinaawe-form textarea {
+		height: 6rem;
+	}
+
+	.active-t {
+		@apply text-blue-500 border-b-2 border-b-blue-500 transition-colors;
+	}
+
+	.inactive-t {
+		@apply text-gray-500 border-b-0 transition-colors;
+	}
+
+	.transaction button.transaction-del-btn {
+		display: none;
+	}
+
+	.transaction:hover button.transaction-del-btn {
+		display: block;
+	}
+
+	#modal-container {
+		display: none;
+		position: fixed;
+		width: 100vw;
+		height: 100vh;
+		z-index: 99;
+	}
+
+	.modal-overlay {
+		width: 100%;
+		height: 100%;
+		background-color: #000;
+		opacity: .4;
+	}
+
+	.modal {
+		@apply rounded-md;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #fff;
+		opacity: 1;
+		z-index: 100;
+	}
+
+    .custom-checkbox {
+        appearance: checkbox !important; 
+        display: inline-block !important; 
+        width: unset !important; 
+        margin: 0 !important; 
+        margin-left: 4px !important; 
+        vertical-align: middle !important; 
+        border: none !important; 
+        outline: none !important; 
+        box-shadow: none !important;
+    }
+
+    .notes textarea {
+        @apply h-[4.5rem];
+    }
+
+	.member-application-header {
+		@apply flex bg-red-500;
+	}
+
+	form input[type="radio"] {
+		appearance: radio !important; 
+        display: inline-block !important; 
+        width: unset !important; 
+        margin: 0 !important; 
+        margin-left: 4px !important; 
+        vertical-align: middle !important; 
+        border: none !important; 
+        outline: none !important; 
+        box-shadow: none !important;
+	}
+
+	.member-application-header button {
+		@apply text-sm bg-[#EEEEEE] basis-full py-2.5 text-blue-500 border-b-2 border-b-blue-500 px-2;
+	}
+
+	.member-application-header .active {
+		@apply bg-indigo-400 text-white border-0;
+	}
+
+	#member-add-form  ul, #loan-form ul {
+		@apply flex flex-wrap gap-4;
+	}
+
+	#member-add-form label, #loan-form label {
+		@apply mt-4
+	}
+
+	#member-add-form textarea[name="business_sector_others"] {
+		@apply h-14;
+	}
+
+	#member-add-form div[aria="nominees-for-benefits"] p {
+		@apply bg-[#eee] py-2 px-1 text-gray-500 text-sm;
+	}
+
+	#member-add-form div[aria="nominees-for-benefits"] input {
+		@apply py-2;
+	}
+
+	.report-btn-active {
+		@apply bg-blue-400 border-none text-white !important;
+	}
+
+	input:disabled , textarea:disabled, select:disabled {
+		@apply bg-gray-50 !important;
+	}
+}

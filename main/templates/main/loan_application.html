@@ -1,0 +1,399 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Loan Application
+    </h2>
+{% endblock %}
+
+
+{% block link11 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<div class="w-full rounded-lg shadow-xs border bg-white pb-4 mb-6 mt-4">
+
+			<div id="form-nav" class="member-application-header">
+				<button class="active">APPLICANT</button>
+				<button>DETAILS</button>
+				<button>GURANTORS</button>
+				<button>LOANS COMITTEE</button>
+			</div>
+
+            <input type="hidden" name="date-fields" value="{{date_fields}}">
+
+            {{form.errors}}
+
+			<form method="POST" action="{% url 'main:loan_application' %}" id="loan-form" class="form-control px-4 pt-4" enctype="multipart/form-data">
+				{% csrf_token %}
+				<input type="hidden" name="user-no-conflict" value="{{user}}">
+				
+				<div aria="applicant" class="section block">
+
+					<div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Member:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.member}}
+							{{form.member.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Member Name:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.member_name}}
+                            {{form.member_name.errors}}
+                        </div>
+                    </div>
+
+					<div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Location of Business:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.location_of_business}}
+                            {{form.location_of_business.errors}}
+                        </div>
+
+						<div>
+                            <label>
+                                <span class="text-dark-heading">Residential Address:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.residential_address}}
+							{{form.residential_address.errors}}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Value of Shares:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.value_of_shares}}
+                            {{form.value_of_shares.errors}}
+                        </div>
+
+						<div>
+                            <label>
+                                <span class="text-dark-heading">Value of Savings:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.value_of_savings}}
+							{{form.value_of_savings.errors}}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+
+                            <label>
+                                <span>Profile Image:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            <div class="w-32 h-32 rounded-full border overflow-hidden">
+                                <img src="#" alt="member" data="image" class="hidden w-32 h-32">
+                            </div>
+
+                        </div>
+                    </div>
+
+				</div>
+
+                <div aria="current_employment" class="section hidden">
+                    
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Amount of Loan Applied For:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.amount}}
+							{{form.amount.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Amount In Words:</span>
+                            </label>
+
+                            {{form.amount_in_words}}
+                            {{form.amount_in_words.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Purpose For Which Loan Is Required:</span>
+                            </label>
+
+                            {{form.purpose_of_loan}}
+							{{form.purpose_of_loan.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Source of Loan Repayment:</span>
+                            </label>
+
+                            {{form.source_of_loan_repayment}}
+							{{form.source_of_loan_repayment.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date when Loan is Required:</span>
+                            </label>
+
+                            {{form.date_when_required}}
+                            {{form.date_when_required.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Date Taken Out:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.date_taken_out}}
+							{{form.date_taken_out.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date Due:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            {{form.date_due}}
+                            {{form.date_due.errors}}
+                        </div>
+
+                    </div>
+
+                    <h2 class="mt-3 py-2 pl-2 text-blue-500  text-sm font-medium bg-[#eeeeee]">SECURITIES OFFERED</h2>
+
+                    <div class="grid grid-cols-3 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Security:</span>
+                            </label>
+
+                            {{form.security_1_name}}
+							{{form.security_1_name.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Location / Department:</span>
+                            </label>
+
+                            {{form.security_1_location}}
+                            {{form.security_1_location.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Approximate Value (in Ush):</span>
+                            </label>
+
+                            {{form.security_1_value}}
+                            {{form.security_1_value.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Security:</span>
+                            </label>
+
+                            {{form.security_2_name}}
+							{{form.security_2_name.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Location / Department:</span>
+                            </label>
+
+                            {{form.security_2_location}}
+                            {{form.security_2_location.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Approximate Value (in Ush):</span>
+                            </label>
+
+                            {{form.security_2_value}}
+                            {{form.security_2_value.errors}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div aria="business" class="section hidden">
+                    
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Guarantor:</span>
+                            </label>
+                            {{form.guarantor_1_name}}
+							{{form.guarantor_1_name.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Membership No:</span>
+                            </label>
+                            {{form.guarantor_1_membership_no}}
+                            {{form.guarantor_1_membership_no.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Guarantor:</span>
+                            </label>
+                            {{form.guarantor_2_name}}
+							{{form.guarantor_2_name.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Membership No</span>
+                            </label>
+                            {{form.guarantor_2_membership_no}}
+                            {{form.guarantor_2_membership_no.errors}}
+                        </div>
+
+                    </div>
+
+                </div>
+                
+                <div aria="finish" class="section hidden">
+
+                    <h2 class="bg-[#eee] font-medium text-sm px-2 py-2 text-blue-500">COMMITTEE MEMBERS</h2>
+                    
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Name:</span>
+                            </label>
+
+                            {{form.committee_member_1}}
+							{{form.committee_member_1.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.committee_member_1_date}}
+                            {{form.committee_member_1_date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Name:</span>
+                            </label>
+                            {{form.committee_member_2}}
+							{{form.committee_member_2.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.committee_member_2_date}}
+                            {{form.committee_member_2_date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Name:</span>
+                            </label>
+                            {{form.committee_member_3}}
+							{{form.committee_member_3.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.committee_member_3_date}}
+                            {{form.committee_member_3_date.errors}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+			</form>
+
+            <div class="flex justify-end gap-4 px-4 mt-4">
+
+                <button action="next" current="0" class="block border border-indigo-500 text-gray-500 px-8 py-2 rounded">Next</button>
+
+                <button form="loan-form" class="bg-indigo-500 text-white px-8 py-2 rounded">Save</button>
+
+            </div>
+            
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+    {{date_fields|json_script:"date-fields"}}
+	<script src="{% static 'custom_scripts/loan_application.js' %}"></script>
+{% endblock %}

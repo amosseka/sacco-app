@@ -1,0 +1,188 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link6 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<h2 class="my-6 text-xl font-semibold text-gray-600">Tulinaawe</h2>
+
+        <div>
+
+			<div class="flex mb-4 gap-4">
+
+				<button class="button mt-0 ml-0 w-48 flex justify-between" data-label="form-toggler">
+					<span>New Contribution</span>
+					<i data-feather="plus" class="w-5 h-5"></i>
+				</button>
+
+				{% if event.status == True %}
+
+					<a href="?status=close" class="flex items-center justify-around w-24 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer border border-gray-300 rounded px-4">
+						<span>Close</span>
+						<i data-feather="eye-off" class="w-4 h-4"></i>
+					</a>
+
+				{% else %}
+
+					<a href="?status=open" class="flex items-center justify-around w-24 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer border border-gray-300 rounded px-4">
+						<span>Open</span>
+						<i data-feather="eye" class="w-4 h-4"></i>
+					</a>
+
+				{% endif %}
+
+				<button class="flex items-center justify-around w-24 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer border border-gray-300 rounded px-4" id="print-btn">
+					<span>Print</span>
+					<i data-feather="printer" class="w-4 h-4"></i>
+				</button>
+
+				<a href="?action=delete&modal=tulinaawe" class="button mt-0 ml-0 w-[6.5rem] flex justify-between bg-red-400 hover:bg-red-500 cursor-pointer">
+					<span>Delete</span>
+					<i data-feather="trash" class="w-5 h-5"></i>
+				</a>
+
+			</div>
+
+			<div class="w-full rounded-lg shadow-xs border bg-white py-2 px-4 mb-4 h-0 hidden" data-label="form-container">
+
+				<form method="POST" action="" class="form-control" id="tulinaawe-contributor-form" autocomplete="off">
+					<input type="hidden" value="" name="tulinaawe-contribution-option">
+					<div class="relative">
+						<div>
+							<label for="member">Member:</label>
+							<input type="text" name="member" required>
+						</div>
+						<div id="choose-member" class="relative hidden w-full h-28 bg-white shadow overflow-y-scroll cursor-pointer">
+							
+						</div>
+					</div>
+					{% csrf_token %}
+					<label for="id_date">Date:</label>
+					{{form.date}}
+					<label for="id_amount">Amount:</label>
+					{{form.amount}}
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			</div>
+
+		</div>
+
+		<div id="print">
+
+        <div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white">
+
+            <h2 class="text-base font-bold text-gray-600">{{event.title}}</h2>
+
+            <p class="my-4">{{event.description}}</p>
+
+			<div class="flex gap-4 flex-wrap">
+				
+				<div class="flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+						<i data-feather="package" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Contributors</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{contributors.count}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="dollar-sign" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Amount Contributed</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{total_contributed|intcomma}}
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center bg-white rounded-lg shadow-xs  py-1">
+					<div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+						<i data-feather="clock" class="h-5 w-5"></i>
+					</div>
+					<div>
+						<p class="text-sm font-medium text-gray-600">Time to Event</p>
+						<p class="text-base font-semibold text-gray-700">
+							{{event.date_due|timeuntil}}
+						</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+        <div class="w-full rounded-lg shadow-xs border mb-4">
+			<table class="w-full whitespace-nowrap">
+
+				<thead>
+					<tr class="text-xs font-bold tracking-wide text-left text-gray-500 bg-row-even">
+						<th class="px-4 py-3">MEMBER</th>
+						<th class="px-4 py-3 contact">CONTACT</th>
+						<th class="px-4 py-3">AMOUNT CONTRIBUTED</th>
+						<th class="px-4 py-3 actions">ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody class="bg-white">
+					{% for contributor in contributors %}
+
+						<tr class="text-gray-700 border-t">
+
+							<td class="px-4 py-3">
+								<div class="flex items-center text-sm">
+									<div class="w-10 h-10 rounded-full relative overflow-hidden">
+										<img src="{{contributor.member.image.url}}" class="object-fill rounded-full absolute">
+									</div>
+									<div class="ml-3">
+										<p class="font-semibold">
+											{{contributor.member.first_name}} 
+                                            {{contributor.member.last_name}}
+										</p>
+										<p class="text-sm tracking-wide text-gray-500">
+											{{contributor.member.code}}
+										</p>
+									</div>
+								</div>
+							</td>
+
+							<td class="px-4 py-3 contact" id="contact-{{forloop.counter}}">
+								{{contributor.member.contact}}
+							</td>
+
+							<td class="px-4 py-3">
+								{{contributor.amount|intcomma}}
+							</td>
+
+							<td class="px-4 py-3 del-btn" id="del-{{forloop.counter}}">
+								<a href="?action=delete&modal=contributor&id={{contributor.id}}" title="Delete" class="flex items-center gap-2">
+									<span class="text-red-500">Delete</span>
+									<i data-feather="trash" class="w-4 h-4 text-red-500"></i>
+								</a>
+							</td>
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+		</div>
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	
+	<script src="{% static 'custom_scripts/tulinaawe.js' %}"></script>
+{% endblock %}

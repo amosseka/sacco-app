@@ -1,0 +1,214 @@
+* {
+	font-family: "Segoe UI";
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.logo {
+	position: absolute;
+	right: 4in;
+	top: .7in;
+	height: .6in;
+	width: .6in;
+}
+
+.logo img {
+	height: 100%;
+	width: 100%;
+}
+
+header h1 {
+	color: blue;
+}
+
+header {
+	display: block;
+	position: fixed;
+	top: 0;
+	text-align: center;
+	width: 100%;
+}
+
+td {
+	color: gray;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
+	display: none;
+}
+
+.wrapper {
+	display: none;
+}
+
+@media print {
+
+	body {
+		margin: 0;
+		width: 8.3in;
+		height: 11.7in;
+	}
+
+	.wrapper {
+		display: table;
+	}
+
+	.logo {
+		position: absolute;
+		right: .8in;
+		top: .5in;
+		height: .6in;
+		width: .6in;
+	}
+
+	.logo img {
+		height: 100%;
+		width: 100%;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.table-area {
+		margin-top: 1em;
+		border: 1px solid #e5e7eb;
+		border-radius: 8px;
+	}
+
+	.table-area tr {
+		border-top: 1px solid #e5e7eb;
+		border-bottom: 1px solid #e5e7eb;
+	}
+
+	.table-area tr:first-of-type {
+		border-top: 0;
+	}
+
+	.table-area tr:last-of-type:not(thead tr) {
+		border-bottom: 0;
+	}
+
+	th {
+		font-size: 13px;
+		line-height: 1;
+		padding: 1rem 0.75rem;
+		color: gray;
+		letter-spacing: 0.025em;
+	}
+
+	td, th {
+		padding: 1em 0.75em;
+		text-align: left;
+	}
+
+	header {
+		position: fixed;
+		top: 0;
+		text-align: center;
+		width: 100%;
+		background: #fff;
+		border-bottom: .1em solid #2E3092;
+		height: 1.19in;
+		z-index: 2;
+	}
+
+	footer {
+		display: block;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		padding-top: .5em;
+		background: #fff;
+		height: 1in;
+	}
+	
+	footer .signatures {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 .5in;
+	}
+
+	footer .slogan {
+		padding-top: .5em; 
+	}
+
+	footer span {
+		display: inline-block;
+		width: 2in;
+		border-bottom: .05em solid black;
+	}
+
+	tfoot {
+		background: #fff;
+	}
+
+	.header-space {
+		height: 1in;
+		background: #fff;
+	}
+
+	.footer-space {
+		height: 1.41in !important;
+	}
+	
+}
+
+/* Copied form tailwind */
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.items-center {
+    align-items: center;
+}
+.flex {
+    display: flex;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+.w-10 {
+    width: 2.5rem;
+}
+.h-10 {
+    height: 2.5rem;
+}
+.relative {
+    position: relative;
+}
+
+.object-fill {
+    -o-object-fit: fill;
+    object-fit: fill;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+.absolute {
+    position: absolute;
+}
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+}
+
+.ml-3 {
+    margin-left: 0.75rem;
+}

@@ -1,0 +1,582 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Add Member
+    </h2>
+{% endblock %}
+
+
+{% block link3 %}
+active-link
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<div class="w-full rounded-lg shadow-xs border bg-white pb-4 mb-6 mt-4">
+
+			<div id="form-nav" class="member-application-header">
+				<button class="active">APPLICANT</button>
+				<button>CURRENT EMPLOYMENT</button>
+				<button>BUINESS</button>
+				<button>NOMINEES FOR BENEFITS</button>
+				<button>FINISH</button>
+			</div>
+
+            <input type="hidden" name="date-fields" value="{{date_fields}}">
+
+            {{form.errors}}
+
+			<form method="POST" action="{% url 'main:update_member' %}" id="member-add-form" class="form-control px-4 pt-4" enctype="multipart/form-data">
+				{% csrf_token %}
+				<input type="hidden" name="user-no-conflict" value="{{user}}">
+				
+				<div aria="applicant" class="section block">
+
+					<div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">KYDI PIN:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.code}}
+							{{form.code.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Contact:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.contact}}
+                            {{form.contact.errors}}
+                        </div>
+                    </div>
+					
+					<div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">First Name:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.first_name}}
+							{{form.first_name.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Last Name:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.last_name}}
+                            {{form.last_name.errors}}
+                        </div>
+                    </div>
+
+					<div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Date of Birth:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.date_of_birth}}
+							{{form.date_of_birth.errors}}
+                        </div>
+
+						<div>
+                            <label>
+                                <span class="text-dark-heading">Date Joined:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.date_joined}}
+							{{form.joined.errors}}
+                        </div>
+                    </div>
+
+					<div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Marital Status:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.marital_status}}
+							{{form.marital_status.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Gender:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.gender}}
+                            {{form.gender.errors}}
+                        </div>
+                    </div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label>
+								<span>ID/Passport No:</span>
+							</label>
+							{{form.identification_no}}
+							{{form.identification_no.errors}}
+						</div>
+
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Email Address:</span>
+                            </label>
+                            {{form.email_address}}
+							{{form.email_address.errors}}
+                        </div>
+                    </div>
+
+					<div class="grid grid-cols-4 gap-4">
+						<div>
+							<label>
+								<span>Residence:</span>
+							</label>
+							{{form.residence}}
+							{{form.residence.errors}}
+						</div>
+
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Town:</span>
+                            </label>
+                            {{form.town}}
+							{{form.town.errors}}
+                        </div>
+
+						<div>
+							<label>
+								<span>Box No:</span>
+							</label>
+							{{form.box_no}}
+							{{form.box_no.errors}}
+						</div>
+
+                        <div>
+                            <label>
+                                <span class="text-dark-heading">Code:</span>
+                            </label>
+                            {{form.town_code}}
+							{{form.town_code.errors}}
+                        </div>
+
+                    </div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label>
+								<span>Source of income.</span>
+							</label>
+							{{form.source_of_income}}
+							{{form.source_of_income.errors}}
+						</div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+
+                            <label>
+                                <span>Profile Image:</span><span class="text-red-500">*</span>
+                            </label>
+
+                            <div>
+                                {{form.image}}
+                                {{form.image.errors}}
+                            </div>
+
+                        </div>
+                    </div>
+
+				</div>
+
+                <div aria="current_employment" class="section hidden">
+                    
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Employer:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.employer}}
+							{{form.employer.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date of Employment:</span>
+                            </label>
+                            {{form.date_of_employment}}
+                            {{form.date_of_employment.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Address:</span>
+                            </label>
+                            {{form.employment_address}}
+							{{form.employment_address.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Position In Employment:</span>
+                            </label>
+                            {{form.position_in_employment}}
+							{{form.position_in_employment.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Payroll/Staff Number:</span>
+                            </label>
+                            {{form.staff_number}}
+                            {{form.staff_number.errors}}
+                        </div>
+
+                    </div>
+
+                    <h2 class="mt-3 py-2 pl-2 text-blue-500  text-sm font-medium bg-[#eeeeee]">REMITTANCE</h2>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Proposed Monthly Contribution (Ush)</span>
+                            </label>
+                            {{form.proposed_monthly_contribution}}
+							{{form.proposed_monthly_contribution.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Effective Date:</span>
+                            </label>
+                            {{form.effective_date}}
+                            {{form.effective_date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Amount In Words:</span>
+                            </label>
+                            {{form.amount_in_words}}
+							{{form.amount_in_words.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Mode of Remittance:</span>
+                            </label>
+                            {{form.mode_of_remittance}}
+							{{form.mode_of_remittance.errors}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div aria="business" class="section hidden">
+                    
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Business Name:</span>
+                            </label>
+                            {{form.business_name}}
+							{{form.business_name.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Business Address:</span>
+                            </label>
+                            {{form.business_address}}
+                            {{form.business_address.errors}}
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Business Sector:</span>
+                            </label>
+                            {{form.business_sector}}
+							{{form.sector.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Others (Specify):</span>
+                            </label>
+                            {{form.business_sector_others}}
+                            {{form.business_sector_others.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Business Monthly Income (Ush):</span>
+                            </label>
+                            {{form.business_monthly_income}}
+							{{form.business_monthly_income.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Business Location:</span>
+                            </label>
+                            {{form.business_location}}
+                            {{form.business_location.errors}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div aria="nominees-for-benefits" class="section hidden">
+
+                    <h2 class="pt-2 pb-4 text-gray-700 font-bold text-sm">
+                        Nominees For Deposits / Beneifts in the event of Death
+                    </h2>
+
+                    <input type="hidden" name="nominees_for_benefits_counter" value="1">
+                    <input type="hidden" name="nominees_for_gfe_counter" value="1">
+
+                    <input type="hidden" name="edit_nominees_deposits" value="{{nominees_for_deposits|length}}">
+                    <input type="hidden" name="edit_nominees_gfe" value="{{nominees_for_gfe|length}}">
+
+                    <div class="grid grid-cols-6">
+                        <p>Name</p>
+                        <p>Id No</p>
+                        <p>Relationship</p>
+                        <p>Percentage (%)</p>
+                        <p>Date of Birth</p>
+                        <p>Mobile/Tel. No.</p>
+                    </div>
+                    
+                    {% for nominee in nominees_for_deposits %}
+                        <div class="grid grid-cols-6 gap-2">
+                            <input type="hidden" name="edit_deposit_id_{{forloop.counter}}" value="{{nominee.id}}">
+                            <input type="text" placeholder="Name" name="edit_benefits_name_{{forloop.counter}}" value="{{nominee.name}}">
+                            <input type="text" placeholder="Id No" name="edit_benefits_id_{{forloop.counter}}" value="{{nominee.id_no}}">
+                            <input type="text" placeholder="Relationship" name="edit_benefits_relationship_{{forloop.counter}}" value="{{nominee.relationship}}">
+                            <input type="number" placeholder="%" name="edit_benefits_percentage_{{forloop.counter}}" value="{{nominee.percentage}}">
+                            <input type="date" placeholder="Date of Birth" name="edit_benefits_date_of_birth_{{forloop.counter}}" value="{{nominee.date_of_birth|date:'Y-m-d'}}">
+                            <input type="text" placeholder="Mobile No." name="edit_benefits_mobile_no_{{forloop.counter}}" value="{{nominee.mobile_no}}">
+                        </div>
+                    {% endfor %}
+                    
+                    <div template="benefits-template" class="grid grid-cols-6 gap-2">
+                        <input type="hidden" name="benefits_count" value="1">
+                        <input type="text" placeholder="Name" name="benefits_name_1">
+                        <input type="text" placeholder="Id No" name="benefits_id_1">
+                        <input type="text" placeholder="Relationship" name="benefits_relationship_1">
+                        <input type="number" placeholder="%" name="benefits_percentage_1">
+                        <input type="date" placeholder="Date of Birth" name="benefits_date_of_birth_1">
+                        <input type="text" placeholder="Mobile No." name="benefits_mobile_no_1">
+                    </div>
+
+                    <button action="deposits" class="flex bg-purple-400 rounded text-white px-2 py-1">
+                        <span>Add</span>
+                        <i data-feather="plus" class="w-4 h-4 self-center"></i>
+                    </button>
+
+                    <h2 class="pt-6 pb-4 text-gray-700 font-bold text-sm">
+                        Nominees For Group Funeral Expense (GFE) Scheme/ Beneifts in the event of Death
+                    </h2>
+
+                    <div class="grid grid-cols-6">
+                        <p>Name</p>
+                        <p>Id No</p>
+                        <p>Relationship</p>
+                        <p>Percentage (%)</p>
+                        <p>Date of Birth</p>
+                        <p>Mobile/Tel. No.</p>
+                    </div>
+
+                    {% for nominee in nominees_for_gfe %}
+                        <div class="grid grid-cols-6 gap-2">
+                            <input type="hidden" name="edit_gfe_id_{{forloop.counter}}" value="{{nominee.id}}">
+                            <input type="text" placeholder="Name" name="edit_gfe_name_{{forloop.counter}}" value="{{nominee.name}}">
+                            <input type="text" placeholder="Id No" name="edit_gfe_id_no_{{forloop.counter}}" value="{{nominee.id_no}}">
+                            <input type="text" placeholder="Relationship" name="edit_gfe_relationship_{{forloop.counter}}" value="{{nominee.relationship}}">
+                            <input type="number" placeholder="%" name="edit_gfe_percentage_{{forloop.counter}}" value="{{nominee.percentage}}">
+                            <input type="date" placeholder="Date of Birth" name="edit_gfe_date_of_birth_{{forloop.counter}}" value="{{nominee.date_of_birth|date:'Y-m-d'}}">
+                            <input type="text" placeholder="Mobile No." name="edit_gfe_mobile_no_{{forloop.counter}}" value="{{nominee.mobile_no}}">
+                        </div>
+                    {% endfor %}
+
+                    <div template="gfe-template" class="grid grid-cols-6 gap-2">
+                        <input type="hidden" name="gfe_count" value="1">
+                        <input type="text" placeholder="Name" name="gfe_name_1">
+                        <input type="text" placeholder="Id No" name="gfe_id_1">
+                        <input type="text" placeholder="Relationship" name="gfe_relationship_1">
+                        <input type="number" placeholder="%" name="gfe_percentage_1">
+                        <input type="date" placeholder="Date of Birth" name="gfe_date_of_birth_1">
+                        <input type="text" placeholder="Mobile No." name="gfe_mobile_no_1">
+                    </div>
+
+                    <button action="gfe" class="flex bg-purple-400 rounded text-white px-2 py-1">
+                        <span>Add</span>
+                        <i data-feather="plus" class="w-4 h-4 self-center"></i>
+                    </button>
+
+                </div>
+                
+                <div aria="finish" class="section hidden">
+                    
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Data Captured By:</span>
+                            </label>
+                            {{form.data_captured_by}}
+							{{form.data_captured_by.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.data_date_capture}}
+                            {{form.data_date_capture.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">System Approval By:</span>
+                            </label>
+                            {{form.system_approval_by}}
+							{{form.system_approval_by.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.system_approval_date}}
+                            {{form.system_approval_date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Membership Approved By:</span>
+                            </label>
+                            {{form.membership_approved_by}}
+							{{form.membership_approved_by.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.membership_approval_date}}
+                            {{form.membership_approval_date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Addmitted By:</span>
+                            </label>
+                            {{form.admitted_by_1}}
+							{{form.admitted_by_1.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.admitted_by_1_date}}
+                            {{form.admitted_by_1_date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Addmitted By:</span>
+                            </label>
+                            {{form.admitted_by_2}}
+							{{form.admitted_by_2.errors}}
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span>
+                            </label>
+                            {{form.admitted_by_2_date}}
+                            {{form.admitted_by_2_date.errors}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+			</form>
+
+            <div class="flex justify-end gap-4 px-4 mt-4">
+
+                <button action="next" current="0" class="block border border-indigo-500 text-gray-500 px-8 py-2 rounded">Next</button>
+
+                <button form="member-add-form" class="bg-indigo-500 text-white px-8 py-2 rounded">Save</button>
+
+            </div>
+            
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+    {{date_fields|json_script:"date-fields"}}
+	<script src="{% static 'custom_scripts/new_member.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block link4 %}
+active-link
+{% endblock %}
+
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Transaction Detail
+    </h2>
+{% endblock %}
+
+{% block content %}
+	<main id="main-body" class="h-full overflow-y-auto bg-bluish px-6">
+
+		<div class="flex gap-4">
+			
+
+			<div class="mt-4 mb-3">
+
+				<button id="general-transaction" class="active-t">
+					General Transaction
+				</button>
+
+				<button id="custom-transaction" class="ml-4 inactive-t">
+					Custom Transaction
+				</button>
+			</div>
+		</div>
+
+		<div class="w-full rounded-lg shadow-xs border bg-white py-4 px-4  mb-4">
+
+			<input type="hidden" value="{{latest_date|date:"Y-m-d"}}" id="latest_date">
+           
+            {% if edit %}
+                <input type="hidden" value='{{edit_date|date:"Y-m-d"}}' name="edit">
+            {% endif %}
+
+			<form method="POST" id="transaction-add-form" class="form-control disabled-form">
+				{% csrf_token %}
+				<input type="hidden" name="user-no-conflict" value="{{user}}">
+                <input type="hidden" name="edit" value="{{edit}}">
+                <input type="hidden" name="transaction-id" value="{{transaction_id}}">
+				
+				<div>
+					
+                    <div class="grid grid-cols-2 gap-8">
+
+                        <div>
+
+                            <label>
+                                <span class="text-dark-heading">Member:</span><span class="text-red-500">*</span>
+                            </label>
+                            {{form.member}}
+                            {{form.member.errors}}
+
+                        </div>
+
+                        <div>
+                            <label>
+                                <span>Date:</span><span class="text-red-500">*</span>
+                                <span class="ml-2 hidden">
+                                    <span>Use previous date</span>
+                                    <input type="checkbox" id="use-last-date" class="custom-checkbox">
+                                </span>
+                            </label>
+                            {{form.date}}
+                            {{form.date.errors}}
+                        </div>
+
+                    </div>
+
+                    <div id="general-transaction" class="block">
+
+                        <div class="grid grid-cols-3 gap-8 mt-4">
+
+                            <div>
+
+                                <label>
+                                    <span>Shares</span><span class="text-red-500">*</span>
+                                </label>
+                                {{form.shares}}
+                                {{form.shares.errors}}
+
+                            </div>
+
+                            <div>
+                                <label>
+                                    <span>Welfare:</span><span class="text-red-500">*</span>
+                                </label>
+                                {{form.welfare}}
+                                {{form.welfare.errors}}
+                            </div>
+
+                            <div>
+                                <label>
+                                    <span>Savings:</span><span class="text-red-500">*</span>
+                                </label>
+                                {{form.savings}}
+                                {{form.savings.errors}}
+                            </div>
+
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-8 mt-4">
+
+                            <div>
+
+                                <label>
+                                    <span>Withdraw:</span><span class="text-red-500">*</span>
+                                </label>
+                                {{form.withdraw}}
+                                {{form.withdraw.errors}}
+                            </div>
+
+                            <div>
+                                <label>
+                                    <span>Fines:</span><span class="text-red-500">*</span>
+                                </label>
+                                {{form.fines}}
+                                {{form.fines.errors}}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div id="custom-transaction" class="hidden">
+
+                        <label>
+                            <span>Amount:</span><span class="text-red-500">*</span>
+                        </label>
+                        {{form.other}}
+                        {{form.other.errors}}
+
+                    </div>
+
+				</div>
+
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="mt-4 flex gap-8">
+
+                        <div class="w-32 h-32 rounded-full border overflow-hidden">
+                            {% if member_transaction or edit %}
+                                <img src="{{member.image.url}}" data="image" alt="image" class="w-32 h-32">
+                            {% else %}
+                                <img src="#" alt="member" data="image" class="hidden w-32 h-32">
+                            {% endif %}
+                            
+                        </div>
+
+                        <div class="flex items-center">
+                            <p data="full-name" class="text-gray-700">
+                                {% if member_transaction or edit %}
+                                    {{member.full_names}}
+                                {% else %}
+                                    Choose Member
+                                {% endif %}
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-4 notes">
+                        <label>
+                            <span>Notes:</span><span class="text-red-500">*</span>
+                        </label>
+                        
+                        {{form.notes}}
+                        {{form.notes.errors}}
+
+                    </div>
+                </div>
+
+				<div class="flex items-center justify-end">
+					<input type="submit" name="submit" value="Save" style="margin-top: 0; margin-bottom: 0;">
+				</div>
+				
+			</form>
+
+		</div>
+	</main>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'custom_scripts/new_transaction.js' %}"></script>
+{% endblock %}

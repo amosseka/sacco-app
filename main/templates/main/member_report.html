@@ -1,0 +1,181 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    <h2 class="border-b-2 border-indigo-500 ml-4 font-semibold text-gray-700">
+        Member Report
+    </h2>
+{% endblock %}
+
+{% block link8 %}
+active-link
+{% endblock %}
+
+
+{% block content %}
+<main id="main-body" class="h-full overflow-y-auto overflow-x-hidden bg-bluish px-6">
+
+    <h2 class="my-6 text-base font-semibold text-gray-600">{{member.full_names}}</h2>
+
+    <div class="w-full rounded-lg shadow-xs border mb-6 p-3 bg-white">
+
+        <div class="grid gap-x-12 gap-y-4 lg:grid-cols-5 md:grid-cols-1">
+            
+            <div class="min-w-max flex flex-wrap items-center bg-white rounded-lg shadow-xs  py-1">
+                <div class="p-2 self-start mr-3 rounded-full bg-orange-100 text-orange-500">
+                    <i data-feather="package" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Shares</p>
+                    <p class="text-base font-semibold text-gray-700" data="total-shares">
+                        {{totals.shares|intcomma}} = {{totals.share_value|intcomma}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+                <div class="p-2 self-start mr-3 rounded-full bg-teal-100 text-teal-500">
+                    <i data-feather="smile" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Welfare</p>
+                    <p class="text-base font-semibold text-gray-700" data="total-welfare">
+                        {{totals.welfare|intcomma}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+                <div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+                    <i data-feather="dollar-sign" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Savings</p>
+                    <p class="text-base font-semibold text-gray-700" data="total-savings">
+                        {{totals.savings|intcomma}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+                <div class="p-2 self-start mr-3 rounded-full bg-blue-100 text-blue-500">
+                    <i data-feather="upload" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Withdraw</p>
+                    <p class="text-base font-semibold text-gray-700" data="total-withdraw">
+                        {{totals.withdraw|intcomma}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+                <div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+                    <i data-feather="credit-card" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Fines</p>
+                    <p class="text-base font-semibold text-gray-700" data="total-fines">
+                        {{totals.fines|intcomma}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="min-w-max flex items-center bg-white rounded-lg shadow-xs  py-1">
+                <div class="p-2 self-start mr-3 rounded-full bg-green-100 text-green-500">
+                    <i data-feather="credit-card" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Other</p>
+                    <p class="text-base font-semibold text-gray-700" data="total-other">
+                        {{totals.other|intcomma}}
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    {% if search_term %}
+        <p class="mb-4 text-xs text-gray-500 uppercase pl-4">
+            <span class="font-semibold">Showing results for -</span> 
+            <span class="text-sm">
+                {{search_term}} {{date_1|date:"D jS, N Y"}} 
+                {% if date_2 %}
+                and 
+                {{date_2|date:"D jS, N Y"}}
+                {% endif %}
+            </span>
+        </p>
+    {% endif %}
+
+    <input type="hidden" name="member-code" value="{{member.code}}">
+
+    <div class="report-btn-active hidden"></div>
+    <div class="pb-4">
+        {% for year in years %}
+            <button data="year" value="{{year.year}}" class="border border-blue-400 py-1 px-4 rounded text-gray-500 hello">{{year.year}}</button>
+        {% endfor %}
+    </div>
+    
+    <div class="pb-4 months-container flex gap-2">
+        {% for key, value in search_months.items %}
+            <button data="month" value="{{key}}" class="border block border-blue-400 py-1 px-4 rounded text-gray-500">{{value}}</button>
+        {% endfor %}
+    </div>
+
+    <div class="pb-4 days-container hidden gap-2">
+        {% for search_day in search_days %}
+            <button data="day" value="{{search_day}}}" class="border block border-blue-400 py-1 px-4 rounded text-gray-500">{{search_day}}</button>
+        {% endfor %}
+    </div>
+
+    <div>
+
+        <div>
+            <h2 class="font-bold py-2 text-gray-600">Total Transactions</h2>
+            <div id="chart-totals" class="mb-4 chart"></div>
+        </div>
+        
+            
+        <div>
+            <h2 class="font-bold py-2">Shares</h2>
+            <div id="chart-shares" class="mb-4 chart"></div>
+        </div>
+
+        <div>
+            <h2 class="font-bold py-2">Welfare</h2>
+            <div id="chart-welfare" class="mb-4 chart"></div>
+        </div>
+            
+
+        <div>
+            <h2 class="font-bold py-2 text-gray-600">Savings</h2>
+            <div id="chart-savings" class="mb-4 chart"></div>
+        </div>
+
+        <div>
+            <h2 class="font-bold py-2 text-gray-600">Withdraw</h2>
+            <div id="chart-withdraw" class="mb-4 chart"></div>
+        </div>
+
+        <div>
+            <h2 class="font-bold py-2 text-gray-600">Fines</h2>
+            <div id="chart-fines" class="mb-4 chart"></div>
+        </div>
+
+        <div>
+            <h2 class="font-bold py-2 text-gray-600">Other</h2>
+            <div id="chart-other" class="mb-4 chart"></div>
+        </div>
+
+    </div>
+        
+</main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'scripts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'custom_scripts/member_report.js' %}"></script>
+{% endblock %}
