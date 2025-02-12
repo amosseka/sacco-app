@@ -11,6 +11,8 @@ from django.http import JsonResponse
 from . import forms
 from . import models
 
+from . import serializers
+
 
 def login_view(request):
 	if request.method == "POST":
@@ -30,6 +32,7 @@ def logout_view(request):
 	if request.method == "POST":
 		logout(request)
 		return redirect("main:login")
+
 
 
 def settings_view(request):
@@ -96,7 +99,7 @@ def dashboard_view(request):
 
 
 def member_api(request):
-	member_info = list(models.Member.objects.filter(code='KYDI/008').values('full_names','welfare', 'savings', 'withdraw', 'fines', 'project_fee'))
+	member_info = list(models.Member.objects.filter(code='KYDI/008').values('code', 'full_names','welfare', 'savings', 'withdraw', 'fines', 'project_fee'))
 	print(member_info)
 	response = json.dumps(member_info)
 	return JsonResponse(response, safe=False)
@@ -1811,6 +1814,17 @@ def print_view(request):
 
 	return render(request, "main/print.html", context)
 
+
+
+#Api View
+
+def api_member_view(request):
+	member = models.Member.objects.get(code="KYDI/008")
+	data = serializers.UserSerializer(member)
+	return JsonResponse(data.data, safe=False)
+
+
+#Post saves and pre deletes
 
 def transaction_post_save(sender, instance, created, **kwargs):
 
