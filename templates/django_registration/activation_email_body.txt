@@ -1,0 +1,1 @@
+Activate account https://{{site}}/accounts/activate/  ACTIVATION KEY: {{activation_key}}

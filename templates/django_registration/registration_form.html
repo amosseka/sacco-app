@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/output.css' %}">
+	<link rel="stylesheet" href="{% static 'fonts/inter/font.css' %}">
+    <title>Register</title>
+</head>
+<body class="bg-[#F9FAFB]">
+    <form action="" method="POST" id="registration-form" class="bg-white p-4 rounded-md lg:w-96 lg:mx-auto lg:mt-8">
+        {% csrf_token %}
+        {{form}}
+        <div>
+            <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign Up</button>
+          </div>
+    </form>
+</body>
+</html>

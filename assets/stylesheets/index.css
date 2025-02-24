@@ -1,12 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
 
 	* {
 		font-family: Inter;
 	}
+
+    .border, .border-r, .border-b, .border-l, .border-t {
+        border-width: 1px;
+        border-color: #ccc;
+    }
+
 
 	::-webkit-scrollbar {
 		width: 4px;
@@ -47,7 +51,7 @@
 	
 
 	.form-control input, select, textarea {
-		@apply block w-full text-sm shadow-sm border border-gray-400 border-opacity-80 text-gray-600 px-3 py-2.5 my-2 rounded outline-none focus:shadow-none focus:ring-indigo-500 focus:border-white focus:ring-2;
+		@apply block w-full text-sm shadow-sm border border-gray-400 text-gray-600 px-3 py-2.5 my-2 rounded outline-none focus:shadow-none focus:ring-indigo-500 focus:border-white focus:ring-2;
 	}
 
 	.form-control input[type="submit"], .button {
@@ -63,7 +67,7 @@
 	}
 
 	.tool-tip {
-		@apply invisible opacity-0 absolute bg-tooltip text-sm text-white rounded-md py-0.5 px-4 group-hover:visible group-hover:opacity-100 shadow;
+		@apply invisible opacity-0 absolute text-sm text-white rounded-md py-0.5 px-4 group-hover:visible group-hover:opacity-100 shadow;
 		bottom: 125%;
 		left: -100%;
 	}
@@ -82,7 +86,7 @@
 	}
 
     .active-link {
-        @apply bg-blue-500 bg-opacity-20 rounded;
+        @apply bg-blue-500 rounded;
         --tw-text-opacity: 1;
         color: rgb(99 102 241 / var(--tw-text-opacity)) !important;
     }
@@ -202,10 +206,19 @@
 	}
 
 	.report-btn-active {
-		@apply bg-blue-400 border-none text-white !important;
+		@apply bg-blue-400 border-none text-white;
 	}
 
 	input:disabled , textarea:disabled, select:disabled {
-		@apply bg-gray-50 !important;
+		@apply bg-gray-50;
 	}
+
+
+    #registration-form input {
+        @apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6;
+    }
+
+    #registration-form ul li, #registration-form span {
+        @apply text-sm;
+    }
 }

@@ -12,6 +12,9 @@ from . import forms
 from . import models
 
 from . import serializers
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 
 def login_view(request):
@@ -1818,6 +1821,8 @@ def print_view(request):
 
 #Api View
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_member_view(request):
 	member = models.Member.objects.get(code="KYDI/008")
 	data = serializers.UserSerializer(member)

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -40,8 +41,28 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'accounts',
+    'rest_framework',
+    'rest_framework.authtoken',
     'client_side_image_cropping',
 ]
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST ='smtp.gmail.com'                                   
+EMAIL_PORT = 587                                                             
+EMAIL_HOST_USER = 'amosemmanelz@gmail.com'                              
+EMAIL_HOST_PASSWORD = 'kmqj brsp zmsc apjc'
+EMAIL_USE_TLS = True
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
