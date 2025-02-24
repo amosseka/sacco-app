@@ -1,1 +1,1 @@
-Activate account https://{{site}}/accounts/activate/  ACTIVATION KEY: {{activation_key}}
+Activate account https://kydiapi.onrender.com/accounts/activate/  ACTIVATION KEY: {{activation_key}}
