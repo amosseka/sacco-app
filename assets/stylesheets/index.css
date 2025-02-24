@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer utilities {
+	.active-link {
+		@apply text-white;
+	}
+}
+
 @layer base {
 
 	* {
@@ -7,10 +13,8 @@
 	}
 
     .border, .border-r, .border-b, .border-l, .border-t {
-        border-width: 1px;
-        border-color: #ccc;
+        border-color: #e5e7eb;
     }
-
 
 	::-webkit-scrollbar {
 		width: 4px;
@@ -48,7 +52,6 @@
 		cursor: pointer;
 	}
 
-	
 
 	.form-control input, select, textarea {
 		@apply block w-full text-sm shadow-sm border border-gray-400 text-gray-600 px-3 py-2.5 my-2 rounded outline-none focus:shadow-none focus:ring-indigo-500 focus:border-white focus:ring-2;
@@ -88,7 +91,7 @@
     .active-link {
         @apply bg-blue-500 rounded;
         --tw-text-opacity: 1;
-        color: rgb(99 102 241 / var(--tw-text-opacity)) !important;
+        color: white !important;
     }
 
 	.active-link ~ span {
