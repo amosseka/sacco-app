@@ -1824,8 +1824,59 @@ def print_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def api_member_view(request):
-	member = models.Member.objects.get(code="KYDI/008")
-	data = serializers.UserSerializer(member)
+	user = request.user
+	user_code = user.username[0:4] + '/' + user.username[4:]
+	member = models.Member.objects.get(code=user_code)
+
+	member_transactions = models.Transaction.objects.fn_manager(fn_year()['start'], fn_year()['last']).filter(member=member)
+
+	shares, savings, withdraw, welfare, fines, other, project_fee, shares_withdraw = (0,0,0,0,0,0,0,0)
+
+	for transaction in member_transactions:
+		if transaction.shares > 0:
+			shares += transaction.shares
+		else:
+			shares_withdraw -= transaction.shares
+
+		savings += transaction.savings
+		withdraw += transaction.withdraw
+		welfare += transaction.welfare
+		fines += transaction.fines
+		other += transaction.other
+		project_fee += transaction.project_fee
+
+	savings = savings - withdraw
+	net_shares = shares - shares_withdraw
+	net_shares_value = net_shares * 5000
+	shares_value = shares * 5000
+	shares_withdraw_value = shares_withdraw * 5000
+
+	context = {
+		"shares": shares,
+		"savings": savings,
+		"withdraw": withdraw,
+		"welfare": welfare,
+		"fines": fines,
+		"other": other,
+		"project_fee": project_fee,
+		"net_shares_value": net_shares_value,
+		"shares_value": shares_value,
+		"shares_withdraw_value": shares_withdraw_value,
+	}
+
+	data = serializers.CustomTransactionSerializer(context)
+	
+	return JsonResponse(data.data, safe=False)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_transaction_view(request):
+	user = request.user
+	user_code = user.username[0:4] + '/' + user.username[4:]
+	member = models.Member.objects.get(code=user_code)
+	transactions = models.Transaction.objects.fn_manager(fn_year()['start'], fn_year()['last']).filter(member=member)
+	data = serializers.TransactionSerializer(transactions, many=True)
 	return JsonResponse(data.data, safe=False)
 
 

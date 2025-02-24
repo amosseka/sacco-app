@@ -45,7 +45,8 @@ urlpatterns = [
     path('api/reports/', views.reports_api, name="reports_api"),
     path('api/member-report/', views.member_report_api, name="member_report_api"),
 
-    path('api/member/', views.api_member_view),
+    path('api/member/', views.api_member_view, name='member-api'),
+    path('api/transactions/', views.api_transaction_view, name='transactions-api'),
 
     path('settings/', views.settings_view, name="settings"),
 ]
