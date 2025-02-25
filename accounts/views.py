@@ -28,10 +28,7 @@ def register(request):
         try:
             user_code = f'{username[0:4]}/{username[4:]}'
             member = main.models.Member.objects.get(code=user_code)
-            if member.email_address == email:
-                return redirect("/accounts/register/")
-            else:
-                context["errors"] = "Email not valid"
+            return redirect("/accounts/register/")
         except main.models.Member.DoesNotExist:
             context["errors"] = "User Does Not Exist"
     else:
