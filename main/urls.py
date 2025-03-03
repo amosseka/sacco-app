@@ -47,6 +47,8 @@ urlpatterns = [
 
     path('api/member/', views.api_member_view, name='member-api'),
     path('api/transactions/', views.api_transaction_view, name='transactions-api'),
+    path('api/loans/', views.api_loans_view, name='loans-api'),
+    path('api/loans/<slug>/', views.api_loans_detail_view, name='loans-detail-api'),
 
     path('settings/', views.settings_view, name="settings"),
 ]

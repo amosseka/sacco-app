@@ -3,6 +3,7 @@ import json
 from django.utils.dateparse import parse_date
 from django.db.models import Sum, Q
 
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models.signals import post_save, pre_delete
 from django.contrib.auth import login, logout
 from django.core.paginator import Paginator
@@ -77,7 +78,7 @@ def settings_view(request):
 
 	return render(request, "main/settings.html", context)
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def dashboard_view(request):
 	total_members = models.Member.objects.all().count()
 	total_transactions = models.Transaction.objects.fn_manager(fn_year()['start'], fn_year()['last']).all().count()
@@ -107,7 +108,7 @@ def member_api(request):
 	response = json.dumps(member_info)
 	return JsonResponse(response, safe=False)
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def tulinaawe_view(request):
 
 	if request.GET.get('action') == 'lookup':
@@ -211,6 +212,7 @@ def tulinaawe_detail(request, slug):
 
 	return render(request, "main/tulinaawe_detail.html", context)
 
+@user_passes_test(lambda user: user.is_superuser)
 def members(request):
 
 	if request.method == "POST" and request.POST.get('member-name'):
@@ -265,7 +267,7 @@ def fn_year():
 		"last": end_date,
 	}
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def member_transactions(request, slug, slug2):
 	member_code = slug + '/' + slug2
 	member = models.Member.objects.get(code=member_code)
@@ -597,7 +599,7 @@ def member_info(request):
 
 		return JsonResponse(context, safe=False)
 
-
+@user_passes_test(lambda user: user.is_superuser)
 def transaction_view(request, slug):
 
 	if request.GET.get('action') == 'delete':
@@ -1853,6 +1855,8 @@ def api_member_view(request):
 
 	context = {
 		"shares": shares,
+		"shares_withdrawn": shares_withdraw,
+		"net_shares": net_shares,
 		"savings": savings,
 		"withdraw": withdraw,
 		"welfare": welfare,
@@ -1877,6 +1881,28 @@ def api_transaction_view(request):
 	member = models.Member.objects.get(code=user_code)
 	transactions = models.Transaction.objects.fn_manager(fn_year()['start'], fn_year()['last']).filter(member=member)
 	data = serializers.TransactionSerializer(transactions, many=True)
+	return JsonResponse(data.data, safe=False)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_loans_view(request):
+	user = request.user
+	user_code = user.username[0:4] + '/' + user.username[4:]
+	member = models.Member.objects.get(code=user_code)
+	loans = models.Loan.objects.fn_manager(fn_year()['start'], fn_year()['last']).filter(member=member)
+	data = serializers.LoanSerializer(loans, many=True)
+	return JsonResponse(data.data, safe=False)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_loans_detail_view(request, slug):
+	user = request.user
+	user_code = user.username[0:4] + '/' + user.username[4:]
+	member = models.Member.objects.get(code=user_code)
+	loan = models.Loan.objects.get(id=int(slug))
+	loan_payments = models.LoanPayment.objects.filter(loan=loan)
+	data = serializers.LoanPaymentSerializer(loan_payments, many=True)
 	return JsonResponse(data.data, safe=False)
 
 

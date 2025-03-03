@@ -4,6 +4,10 @@
 	.active-link {
 		@apply text-white;
 	}
+
+	.shadow-xs {
+		box-shadow: none;
+	}
 }
 
 @layer base {
@@ -51,7 +55,6 @@
 	form input[type="submit"] {
 		cursor: pointer;
 	}
-
 
 	.form-control input, select, textarea {
 		@apply block w-full text-sm shadow-sm border border-gray-400 text-gray-600 px-3 py-2.5 my-2 rounded outline-none focus:shadow-none focus:ring-indigo-500 focus:border-white focus:ring-2;
@@ -120,6 +123,12 @@
 
 	.transaction:hover button.transaction-del-btn {
 		display: block;
+	}
+
+	.tool-tip {
+		@apply invisible opacity-0 absolute bg-[#555] text-sm text-white rounded-md py-0.5 px-4 group-hover:visible group-hover:opacity-100 shadow;
+		bottom: 125%;
+		left: -100%;
 	}
 
 	#modal-container {

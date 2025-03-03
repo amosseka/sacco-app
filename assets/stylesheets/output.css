@@ -2258,6 +2258,9 @@
   .active-link {
     color: var(--color-white);
   }
+  .shadow-xs {
+    box-shadow: none;
+  }
 }
 @layer base {
   * {
@@ -2485,6 +2488,32 @@
   }
   .transaction:hover button.transaction-del-btn {
     display: block;
+  }
+  .tool-tip {
+    visibility: hidden;
+    position: absolute;
+    border-radius: var(--radius-md);
+    background-color: #555;
+    padding-inline: calc(var(--spacing) * 4);
+    padding-block: calc(var(--spacing) * 0.5);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    color: var(--color-white);
+    opacity: 0%;
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        visibility: visible;
+      }
+    }
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        opacity: 100%;
+      }
+    }
+    bottom: 125%;
+    left: -100%;
   }
   #modal-container {
     display: none;

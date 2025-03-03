@@ -17,6 +17,8 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class CustomTransactionSerializer(serializers.Serializer):
     shares = serializers.IntegerField()
+    shares_withdrawn = serializers.IntegerField()
+    net_shares = serializers.IntegerField()
     savings = serializers.IntegerField()
     withdraw = serializers.IntegerField()
     welfare = serializers.IntegerField()
@@ -26,3 +28,17 @@ class CustomTransactionSerializer(serializers.Serializer):
     net_shares_value = serializers.IntegerField()
     shares_value = serializers.IntegerField()
     shares_withdraw_value = serializers.IntegerField()
+
+
+class LoanSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Loan
+        fields = ['id', 'member_name', 'amount', 'amount_in_words', 'amount_paid', 'interest', 'balance']
+
+
+class LoanPaymentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.LoanPayment
+        fields = ['amount', 'date']
