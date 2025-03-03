@@ -78,7 +78,7 @@ def settings_view(request):
 
 	return render(request, "main/settings.html", context)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_superuser, login_url='/')
 def dashboard_view(request):
 	total_members = models.Member.objects.all().count()
 	total_transactions = models.Transaction.objects.fn_manager(fn_year()['start'], fn_year()['last']).all().count()
@@ -108,7 +108,7 @@ def member_api(request):
 	response = json.dumps(member_info)
 	return JsonResponse(response, safe=False)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_superuser, login_url='/')
 def tulinaawe_view(request):
 
 	if request.GET.get('action') == 'lookup':
@@ -212,7 +212,7 @@ def tulinaawe_detail(request, slug):
 
 	return render(request, "main/tulinaawe_detail.html", context)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_superuser, login_url='/')
 def members(request):
 
 	if request.method == "POST" and request.POST.get('member-name'):
@@ -267,7 +267,7 @@ def fn_year():
 		"last": end_date,
 	}
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_superuser, login_url='/')
 def member_transactions(request, slug, slug2):
 	member_code = slug + '/' + slug2
 	member = models.Member.objects.get(code=member_code)
@@ -599,7 +599,7 @@ def member_info(request):
 
 		return JsonResponse(context, safe=False)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_superuser, login_url='/')
 def transaction_view(request, slug):
 
 	if request.GET.get('action') == 'delete':
@@ -635,7 +635,7 @@ def transaction_detail(request, slug):
 
 	return render(request, 'main/form_view/transaction_detail.html', context)
 
-
+@user_passes_test(lambda user: user.is_superuser, login_url='/')
 def all_transactions(request):
 
 	financial_year = models.FinancialYear.objects.get(active=True)
