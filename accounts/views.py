@@ -2,6 +2,7 @@ import json
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -24,13 +25,20 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         context = {}
-        print(username, email)
+        
         try:
-            user_code = f'{username[0:4]}/{username[4:]}'
-            member = main.models.Member.objects.get(code=user_code)
-            return redirect("/accounts/register/")
-        except main.models.Member.DoesNotExist:
-            context["errors"] = "User Does Not Exist"
+            User.objects.get(username=username)
+            context["errors"] = "A user with that username already exists"
+        except:
+            try:
+                user_code = f'{username[0:4]}/{username[4:]}'
+                member = main.models.Member.objects.get(code=user_code)
+                if member.email_address == email:
+                    return redirect("/accounts/register/")
+                else:
+                    context["errors"] = "Email does not exist"
+            except main.models.Member.DoesNotExist:
+                context["errors"] = "User Does Not Exist"
     else:
         context = {}
         
