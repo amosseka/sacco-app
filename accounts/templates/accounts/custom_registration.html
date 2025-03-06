@@ -10,8 +10,10 @@
 </head>
 <body class="bg-[#F9FAFB]">
     <form action="" method="POST" id="registration-form" class="bg-white p-4 rounded-md lg:w-96 lg:mx-auto lg:mt-8">
+        {% csrf_token %}
+        <form action="" method="POST" id="registration-form" class="bg-white p-4 rounded-md lg:w-96 lg:mx-auto lg:mt-8">
 
-        {% csrf_token %}            
+            
         <label for="id_username" class="required">Username:</label>
         
           
@@ -46,27 +48,10 @@
             
             {{form.errors}}
 
-        <div>
-            <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign Up</button>
-        </div>
+            <div>
+                <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign Up</button>
+              </div>
+        </form>
     </form>
-    <script>
-
-    let slug = window.location.search.split("&");
-    let username = slug[0];
-    let email = slug[1];
-
-    username = username.slice(username.indexOf("=")+1);
-    email = email.slice(email.indexOf("=")+1);
-    console.log(username, email);
-
-    let usernameInput = document.querySelector("input[name=username]");
-    let emailInput = document.querySelector("input[name=email]");
-    usernameInput.setAttribute("readonly", "true");
-    usernameInput.value = username;
-    emailInput.setAttribute("readonly", "true");
-    emailInput.value = email;
-
-    </script>
 </body>
 </html>

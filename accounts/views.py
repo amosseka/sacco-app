@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from django_registration.forms import RegistrationForm
+from django_registration.backends.activation.views import RegistrationView
+from django.http import HttpResponse
 import main
 
 def django_registration_complete(request):
@@ -34,7 +37,7 @@ def register(request):
                 user_code = f'{username[0:4]}/{username[4:]}'
                 member = main.models.Member.objects.get(code=user_code)
                 if member.email_address == email:
-                    return redirect("/accounts/register/")
+                    return redirect(f"/accounts/register?username={username}&email={email}")
                 else:
                     context["errors"] = "Email does not exist"
             except main.models.Member.DoesNotExist:
@@ -44,3 +47,25 @@ def register(request):
         
 
     return render(request, 'accounts/start_registration.html', context)
+
+
+def custom_registration(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            print(user)
+            return HttpResponse("200 OK")
+    else:
+        username = request.GET.get("username")
+        email = request.GET.get("email")
+        form = RegistrationForm(initial={"username": username, "email": email})
+    context = {
+        "form": form
+    }
+
+    return render(request, "accounts/custom_registration.html", context)
+
+
+class CustomRegistrationView(RegistrationView):
+    pass
