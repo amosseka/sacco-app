@@ -780,6 +780,7 @@ def all_transactions(request):
 			totals["savings"] += transaction.savings
 			totals["withdraw"] += transaction.withdraw
 			totals["welfare"] += transaction.welfare
+			totals["project_fee"] += transaction.project_fee
 			totals["fines"] += transaction.fines
 			totals["other"] += transaction.other
 

@@ -18,5 +18,16 @@
     </form>
     
     {{activation_error}}
+    <script>
+    let activationKey = window.location.search;
+    let activationInput = document.querySelector("input[name=activation_key]");
+    activationInput.setAttribute("readonly", "true");
+    activationKey = activationKey.slice(activationKey.indexOf("=")+1);
+    console.log(activationKey=="");
+    if (!activationKey == "") {
+        activationInput.value = activationKey;
+    }
+    
+    </script>
 </body>
 </html>

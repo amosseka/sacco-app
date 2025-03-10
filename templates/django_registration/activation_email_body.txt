@@ -1,1 +1,1 @@
-Activate account https://kydiapi.onrender.com/accounts/activate/  ACTIVATION KEY: {{activation_key}}
+Activate account https://kydiapi.onrender.com/accounts/activate?activation_key={{activation_key}}
