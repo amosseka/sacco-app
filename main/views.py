@@ -8,7 +8,7 @@ from django.db.models.signals import post_save, pre_delete
 from django.contrib.auth import login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from . import forms
 from . import models
 
@@ -17,6 +17,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
+from rest_framework.renderers import JSONRenderer
 
 def login_view(request):
 	if request.method == "POST":
@@ -1906,6 +1909,29 @@ def api_loans_detail_view(request, slug):
 	data = serializers.LoanPaymentSerializer(loan_payments, many=True)
 	return JsonResponse(data.data, safe=False)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_reset_password(request):
+	user = request.user
+	member = models.Member.objects.get(code=user.username[0:4]+'/'+user.username[4:])
+	data = json.loads(request.body)
+	old_password = data.get("old_password")
+	new_password = data.get("new_password")
+
+	if user.check_password(old_password):
+		try:
+			validate_password(new_password, user=user)
+		except ValidationError:
+			context = {
+				"error": "Password too common"
+			}
+			return JsonResponse(context, safe=False)
+
+	else:
+		print("False")
+
+	return HttpResponse("Hit")
+	
 
 #Post saves and pre deletes
 
