@@ -1909,28 +1909,56 @@ def api_loans_detail_view(request, slug):
 	data = serializers.LoanPaymentSerializer(loan_payments, many=True)
 	return JsonResponse(data.data, safe=False)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_tulinaawe(request):
+	user = request.user
+	user_code = user.username[0:4] + '/' + user.username[4:]
+	member = models.Member.objects.get(code=user_code)
+	tulinaawe_contributions = models.TulinaaweContributor.objects.filter(member=member)
+	data = serializers.TulinaaweContributorSerializer(tulinaawe_contributions, many=True)
+	return JsonResponse(data.data, safe=False)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_reset_password(request):
 	user = request.user
-	member = models.Member.objects.get(code=user.username[0:4]+'/'+user.username[4:])
 	data = json.loads(request.body)
 	old_password = data.get("old_password")
+
 	new_password = data.get("new_password")
+	confirm_new_password = data.get("confirm_new_password")
 
 	if user.check_password(old_password):
-		try:
-			validate_password(new_password, user=user)
-		except ValidationError:
+		if new_password == confirm_new_password:
+			try:
+				validate_password(new_password, user=user)
+				user.set_password(new_password)
+				user.save()
+				context = {
+					"status": 200,
+					"response_text": "Password successfully changed",
+				}
+				return JsonResponse(context, safe=False)
+			except ValidationError as e:
+				error_list = [error for error in e]
+				print(error_list)
+				context = {
+					"error": error_list
+				}
+				return JsonResponse(context, safe=False)
+		else:
 			context = {
-				"error": "Password too common"
+				"error": "Password does not match"
 			}
 			return JsonResponse(context, safe=False)
-
 	else:
-		print("False")
+		context = {
+			"error": "Old Password does not match"
+		}
 
-	return HttpResponse("Hit")
+		return JsonResponse(context, safe=False)
 	
 
 #Post saves and pre deletes

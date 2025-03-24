@@ -42,3 +42,10 @@ class LoanPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LoanPayment
         fields = ['amount', 'date']
+
+
+class TulinaaweContributorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TulinaaweContributor
+        fields = ['date', 'event_name', 'event_status', 'amount']

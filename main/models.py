@@ -316,6 +316,17 @@ class TulinaaweContributor(models.Model):
 	member = models.ForeignKey(Member, on_delete=models.CASCADE)
 	amount = models.IntegerField(default=0)
 
+	@property
+	def event_status(self):
+		if self.event.status:
+			return "Event Open"
+		else:
+			return "Event closed"
+
+	@property
+	def event_name(self):
+		return self.event.title
+
 	def __str__(self):
 		return "%s %s -- %s"%(self.member.first_name, self.member.last_name, self.event)
 

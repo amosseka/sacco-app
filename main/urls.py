@@ -49,6 +49,7 @@ urlpatterns = [
     path('api/transactions/', views.api_transaction_view, name='transactions-api'),
     path('api/loans/', views.api_loans_view, name='loans-api'),
     path('api/loans/<slug>/', views.api_loans_detail_view, name='loans-detail-api'),
+    path('api/tulinaawe/', views.api_tulinaawe, name='tulinaawe-api'),
     path('api/reset-password/', views.api_reset_password, name='reset-password-api'),
 
     path('settings/', views.settings_view, name="settings"),
