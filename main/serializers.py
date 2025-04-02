@@ -5,7 +5,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Member
-        fields = ['code', 'first_name', 'last_name', 'full_names', 'email_address', 'shares', 'welfare', 'savings', 'withdraw', 'fines', 'project_fee']
+        fields = ['code', 'image' 'first_name', 'last_name', 'full_names', 'email_address', 'shares', 'welfare', 'savings', 'withdraw', 'fines', 'project_fee']
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -16,6 +16,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class CustomTransactionSerializer(serializers.Serializer):
+    image = serializers.ImageField()
     shares = serializers.IntegerField()
     shares_withdrawn = serializers.IntegerField()
     net_shares = serializers.IntegerField()

@@ -1860,6 +1860,7 @@ def api_member_view(request):
 	context = {
 		"shares": shares,
 		"shares_withdrawn": shares_withdraw,
+		"image": member.image,
 		"net_shares": net_shares,
 		"savings": savings,
 		"withdraw": withdraw,
