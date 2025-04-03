@@ -252,6 +252,10 @@ class Transaction(models.Model):
 
 	objects = FinancialYearManager()
 
+	@property 
+	def single_date(self):
+		return self.date.date()
+
 	@property
 	def notes_snippet(self):
 		return "%s..."%(self.notes[0:70])

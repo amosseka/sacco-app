@@ -12,7 +12,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Transaction
-        fields = ['date', 'shares', 'savings', 'welfare', 'withdraw', 'project_fee', 'fines']
+        fields = ['date', 'single_date', 'shares', 'savings', 'welfare', 'withdraw', 'project_fee', 'fines']
 
 
 class CustomTransactionSerializer(serializers.Serializer):
