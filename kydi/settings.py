@@ -26,7 +26,7 @@ SECRET_KEY = ')mq0)7r4pl&vt^lii7m1xz*bfp8)12e%k*c(=z^_56)=d2zo%!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'kydiapi.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*', '.onredner.com']
 
 
 # Application definition
