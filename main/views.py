@@ -1856,8 +1856,10 @@ def api_member_view(request):
 	net_shares_value = net_shares * 5000
 	shares_value = shares * 5000
 	shares_withdraw_value = shares_withdraw * 5000
-
-	context = {
+	
+	context = {	
+		"code": member.code,
+		"full_names": member.full_names,
 		"shares": shares,
 		"shares_withdrawn": shares_withdraw,
 		"image": member.image,

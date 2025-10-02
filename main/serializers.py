@@ -16,6 +16,8 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class CustomTransactionSerializer(serializers.Serializer):
+    code = serializers.CharField()
+    full_names = serializers.CharField()
     image = serializers.ImageField()
     shares = serializers.IntegerField()
     shares_withdrawn = serializers.IntegerField()
