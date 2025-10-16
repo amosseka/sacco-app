@@ -51,8 +51,8 @@ EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST ='smtp.gmail.com'                                   
 EMAIL_PORT = 587                                                             
-EMAIL_HOST_USER = 'amosemmanelz@gmail.com'                              
-EMAIL_HOST_PASSWORD = 'kmqj brsp zmsc apjc'
+EMAIL_HOST_USER = 'kazingayouthdevelopment@gmail.com'                              
+EMAIL_HOST_PASSWORD = 'vaim qzmf afhh mtoa'
 EMAIL_USE_TLS = True
 
 ACCOUNT_ACTIVATION_DAYS = 7
